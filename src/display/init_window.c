@@ -33,8 +33,9 @@ t_cub	*init_cub(t_map *map)
 	if (init_mlx(&cub) == EXIT_FAILURE)
 		return (NULL);
 	//fdf->theme = &default_theme;
-	init_view(fdf);
-	draw_fdf(fdf);
+	//init_view(fdf);
+	if (draw_cub(cub) == EXIT_FAILURE)
+		return (NULL);
 	mlx_put_image_to_window(fdf->mlx.mlx, fdf->mlx.win, fdf->mlx.img, 0, 0);
 	mlx_hook(fdf->mlx.win, ON_DESTROY, MKEYPRESS, mouse_hook, fdf);
 	mlx_hook(fdf->mlx.win, ON_KEYDOWN, MKEYPRESS, ft_key_choose, fdf);
