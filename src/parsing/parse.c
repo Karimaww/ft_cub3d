@@ -18,6 +18,8 @@ char	**create_map(t_lst *lst, t_vec2 *map_size)
 		if (map_size->x < tmp->size)
 			map_size->x = tmp->size;
 		map[i] = ft_strdup(tmp->tab);
+		if (!map[i])
+			return (printf("Error: Strdup failed.\n"), free_tab(map), NULL);
 		i++;
 		tmp = tmp->next;
 	}

@@ -36,11 +36,12 @@ int	main(int ac, char **av, char **env)
 	map = parse(av[1]);
 	if (!map)
 		return (EXIT_FAILURE);
-	print_map_tab(map->map, map->map_size);
-	printf("no = %s \nso = %s \nwe = %s \nea = %s \n", map->no, map->so, map->we, map->ea);
-	printf("f = %d, %d, %d\n", map->f.r, map->f.g, map->f.b);
-	printf("c = %d, %d, %d\n", map->c.r, map->c.g, map->c.b);
-	printf("player = %d, %d\n", map->player.x, map->player.y);
+	//print_map_tab(map->map, map->map_size);
+	// printf("no = %s \nso = %s \nwe = %s \nea = %s \n",
+	// 	map->no, map->so, map->we, map->ea);
+	// printf("f = %d, %d, %d\n", map->f.r, map->f.g, map->f.b);
+	// printf("c = %d, %d, %d\n", map->c.r, map->c.g, map->c.b);
+	// printf("player = %d, %d\n", map->player.x, map->player.y);
 	free_map(map);
 	return (0);
 }
