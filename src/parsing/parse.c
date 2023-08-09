@@ -24,7 +24,8 @@ char	**create_map(t_lst *lst, t_vec2 *map_size)
 		tmp = tmp->next;
 	}
 	map[i] = NULL;
-	if (map_size->x == 0 || map_size->x == 1)
+	if (map_size->x == 0 || map_size->x == 1
+		|| !space_extension(map, map_size->x))
 		return (printf("Error: Invalid map.\n"), NULL);
 	if (check_isolation(map, map_size->y) == EXIT_FAILURE)
 		return (printf("Error: Map is not closed.\n"), free_tab(map), NULL);

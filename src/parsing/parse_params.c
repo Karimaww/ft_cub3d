@@ -1,5 +1,44 @@
 #include "cub3d.h"
 
+char	*repeat_char(char c, int n)
+{
+    char	*str;
+	
+	str = (char *)malloc(n + 1);
+    if (!str)
+		return NULL;
+	memset(str, c, n);
+    str[n] = '\0';
+    return (str);
+}
+
+int	space_extension(char **map, int x)
+{
+	int		i;
+	char	*tmp;
+	char	*spaces;
+
+	i = 0;
+	tmp = NULL;
+	while (map[i])
+	{
+		if ((int)ft_strlen(map[i]) < x)
+		{
+			tmp = map[i];
+			spaces = repeat_char(' ', x - ft_strlen(map[i]));
+			if (!spaces)
+				return (0);
+			map[i] = ft_strjoin(map[i], spaces);
+			if (!map[i])
+				return (0);
+			free(tmp);
+			free(spaces);
+		}
+		i++;
+	}
+	return (1);
+}
+
 int	put_dir(char **dir, char *line)
 {
 	int		i;

@@ -4,7 +4,7 @@ void	ft_close(t_cub *cub)
 {
 	if (cub->map)
 	{
-		free_map(cub->map->map, cub->map->sizey);
+		free_tab(cub->map->map);
 		free(cub->map);
 	}
 	if (cub->mlx.img)
@@ -41,6 +41,7 @@ void	clear_screen(t_cub *cub)
 
 int	ft_key_choose(int key, t_cub *cub)
 {
+	printf("key : %d\n", key);
 	if (key == W || key == A || key == S || key == D)
 		hook_move(cub, key);
 	// if (key == ESC)

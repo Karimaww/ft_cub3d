@@ -2,7 +2,8 @@ CC			= cc
 
 NAME		= cub3d
 
-#SOURCES_DISPLAY	=
+SOURCES_DISPLAY		=	hooks.c			\
+						init_window.c	\
 
 SOURCES_PARSING 	=	parse.c			\
 						parse_params.c	\
@@ -11,6 +12,8 @@ SOURCES_PARSING 	=	parse.c			\
 SOURCES_UTILS 		=	lst_utils.c		\
 						map_utils.c		\
 						map_check.c		\
+						mlx_actions.c	\
+						mlx_utils.c		\
 
 LIBFT		= libft
 
@@ -28,8 +31,8 @@ RM			= rm -f
 
 OBJS_PARSING = $(addprefix $(OBJ_DIR)/parsing/,$(SOURCES_PARSING:.c=.o))
 OBJS_UTILS = $(addprefix $(OBJ_DIR)/utils/,$(SOURCES_UTILS:.c=.o))
-#OBJS_DISPLAY = $(addprefix $(OBJ_DIR)/builtins/,$(OBJS_DISPLAY:.c=.o))
-OBJS = $(OBJS_PARSING) $(OBJS_UTILS) #$(OBJS_DISPLAY)
+OBJS_DISPLAY = $(addprefix $(OBJ_DIR)/display/,$(SOURCES_DISPLAY:.c=.o))
+OBJS = $(OBJS_PARSING) $(OBJS_UTILS) $(OBJS_DISPLAY)
 
 all: lib obj $(NAME)
 
@@ -37,17 +40,21 @@ lib:
 	@make -C $(LIBFT)
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -L $(LIBFT) -lft -lncurses -o $(NAME)
+	$(CC) $(OBJS) -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
+#$(CC) $(OBJS) -L $(LIBFT) -lft -lncurses -o $(NAME)
 
 #$(CC) $(OBJS) -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
 
 obj:
-	mkdir -p $(OBJ_DIR) $(OBJ_DIR)/parsing $(OBJ_DIR)/utils 
+	mkdir -p $(OBJ_DIR) $(OBJ_DIR)/parsing $(OBJ_DIR)/utils $(OBJ_DIR)/display
 
 $(OBJ_DIR)/parsing/%.o: $(SRC_DIR)/parsing/%.c $(INCLUDE)/cub3d.h Makefile
 	$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
 
 $(OBJ_DIR)/utils/%.o: $(SRC_DIR)/utils/%.c $(INCLUDE)/cub3d.h Makefile
+	$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
+
+$(OBJ_DIR)/display/%.o: $(SRC_DIR)/display/%.c $(INCLUDE)/cub3d.h Makefile
 	$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
 
 bonus: $(NAME)

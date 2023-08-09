@@ -13,6 +13,11 @@
 // # include "events.h"
 
 // look up 
+# define KEYPRESS 2
+# define KEYRELEASE 3
+# define BUTTONPRESS 4
+# define BUTTONRELEASE 5
+# define MKEYPRESS 1L
 
 enum {
 	ON_KEYDOWN = 2,
@@ -21,7 +26,11 @@ enum {
 	ON_MOUSEUP = 5,
 	ON_MOUSEMOVE = 6,
 	ON_EXPOSE = 12,
-	ON_DESTROY = 17
+	ON_DESTROY = 17,
+	A = 33,
+	W = 44,
+	S = 55,
+	D = 66
 };
 
 typedef struct s_vec2
@@ -92,6 +101,7 @@ int		is_line_for_map(char *line);
 int		free_tab(char **tab);
 int		free_map(t_map *map);
 int		check_isolation(char **tab, int size);
+int		space_extension(char **map, int x);
 
 int		empty_params(t_map *map);
 int		empty_line(char *line);
@@ -99,5 +109,9 @@ char	*ignore_empty_lines(char *line, int fd);
 int		put_color(t_color *color, char *line);
 void	init_color(t_color *color);
 int		check_colors(char **rgb, t_color *color);
+
+/*----display utils----*/
+int	ft_key_choose(int key, t_cub *cub);
+int	mouse_hook(t_cub *cub);
 
 #endif
