@@ -27,6 +27,7 @@ void	print_lst(t_lst *lst)
 int	main(int ac, char **av, char **env)
 {
 	t_map	*map;
+	t_cub	*cub;
 
 	if (!*env)
 		return (printf("Error: env.\n"), EXIT_FAILURE);
@@ -42,6 +43,10 @@ int	main(int ac, char **av, char **env)
 	// printf("f = %d, %d, %d\n", map->f.r, map->f.g, map->f.b);
 	// printf("c = %d, %d, %d\n", map->c.r, map->c.g, map->c.b);
 	// printf("player = %d, %d\n", map->player.x, map->player.y);
+	cub = init_cub(map);
+	if (!cub)
+		return (printf("Error: init cub.\n"), EXIT_FAILURE);
+	mlx_loop(cub->mlx->mlx);
 	free_map(map);
 	return (0);
 }

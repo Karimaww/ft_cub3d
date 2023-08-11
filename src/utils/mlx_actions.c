@@ -42,8 +42,14 @@ void	clear_screen(t_cub *cub)
 int	ft_key_choose(int key, t_cub *cub)
 {
 	printf("key : %d\n", key);
-	if (key == W || key == A || key == S || key == D)
-		hook_move(cub, key);
+	if (key == W)
+		hook_up(cub, key);
+	if (key == A)
+		hook_left(cub, key);
+	if (key == S)
+		hook_down(cub, key);
+	if (key == D)
+		hook_right(cub, key);
 	// if (key == ESC)
 	// 	ft_close(cub);
 	// if (key == SPACE)

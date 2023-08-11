@@ -6,9 +6,12 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
-// # include "../mlx/mlx.h"
+# include "../mlx/mlx.h"
 # include <stdbool.h>
 # include <stdio.h>
+# define RGB_RED 0xFFA07A
+# define RGB_BLACK 0x000000
+# define RGB_GREEN 	0x7CFC00
 // # include "colors.h"
 // # include "events.h"
 
@@ -38,6 +41,12 @@ typedef struct s_vec2
 	int			x;
 	int			y;
 }				t_vec2;
+
+typedef struct s_vec2d
+{
+	double		x;
+	double		y;
+}				t_vec2d;
 
 typedef struct s_lst
 {
@@ -78,11 +87,25 @@ typedef struct s_mlx
 	t_vec2	win_size;
 }	t_mlx;
 
+typedef struct s_ray
+{
+	t_vec2	pos;
+	t_vec2	dir;
+	t_vec2	step;
+	t_vec2	map;
+	t_vec2d	ray_dir;
+	t_vec2d	delta_dist;
+	t_vec2d	side_dist;
+	t_vec2d	camera;
+	int		hit;
+	int		side;
+}			t_ray;
+
 typedef struct s_cub
 {
 	t_map	*map;
 	t_mlx	*mlx;
-	t_vec2	*pos;
+	t_ray	*ray;
 }			t_cub;
 
 /*----parsing----*/
@@ -111,7 +134,15 @@ void	init_color(t_color *color);
 int		check_colors(char **rgb, t_color *color);
 
 /*----display utils----*/
-int	ft_key_choose(int key, t_cub *cub);
-int	mouse_hook(t_cub *cub);
+int		ft_key_choose(int key, t_cub *cub);
+int		mouse_hook(t_cub *cub);
+void	clear_screen(t_cub *cub);
+void	ft_close(t_cub *cub);
+void	pixel_put(t_mlx *data, int x, int y, int color);
+void	draw_line(t_cub *cub, t_vec2 p1, t_vec2 p2);
+
+int		draw_cub(t_cub *cub);
+t_cub	*init_cub(t_map *map);
+int		ft_key_choose(int key, t_cub *cub);
 
 #endif

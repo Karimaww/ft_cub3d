@@ -3,7 +3,7 @@ CC			= cc
 NAME		= cub3d
 
 SOURCES_DISPLAY		=	hooks.c			\
-						init_window.c	\
+						init_cub.c		\
 
 SOURCES_PARSING 	=	parse.c			\
 						parse_params.c	\
