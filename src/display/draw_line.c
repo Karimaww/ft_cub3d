@@ -21,10 +21,10 @@ void	line_low(t_cub *cub, t_vec2 p1, t_vec2 p2, float dist)
 	dy = p2.y - p1.y;
 	yi = set_i_d(&dy);
 	d = 2 * dy - dx;
+	(void)dist;
 	while (p1.x < p2.x)
 	{
-		pixel_put(&(cub->mlx), p1.x, p1.y,
-			get_color(p1, p2, dist));
+		pixel_put(&(cub->mlx), p1.x, p1.y, p2.color);
 		if (d > 0)
 		{
 			p1.y += yi;
@@ -47,10 +47,10 @@ void	line_high(t_cub *cub, t_vec2 p1, t_vec2 p2, float dist)
 	dy = p2.y - p1.y;
 	xi = set_i_d(&dx);
 	d = 2 * dx - dy;
+	(void)dist;
 	while (p1.y < p2.y)
 	{
-		pixel_put(&(cub->mlx), p1.x, p1.y,
-			get_color(p1, p2, dist));
+		pixel_put(&(cub->mlx), p1.x, p1.y, p2.color);
 		if (d > 0)
 		{
 			p1.x += xi;
@@ -61,6 +61,7 @@ void	line_high(t_cub *cub, t_vec2 p1, t_vec2 p2, float dist)
 		p1.y += 1;
 	}
 }
+
 int		get_dist(t_vec2 p1, t_vec2 p2)
 {
 	return (p2.y - p1.y);

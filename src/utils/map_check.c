@@ -74,7 +74,7 @@ int	check_border(char **tab, int i, int j, int size)
 		return (0);
 	if (tab[i - 1][j] == ' ')
 		return (0);
-	if ( tab[i + 1][j] == ' ')
+	if (tab[i + 1][j] == ' ')
 		return (0);
 	if (tab[i][j - 1] == ' ')
 		return (0);

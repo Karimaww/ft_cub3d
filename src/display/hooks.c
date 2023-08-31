@@ -9,53 +9,49 @@
  glutPostRedisplay();
 }*/
 
-void	hook_up(t_cub *cub, int key)
+void	hook_up(t_cub **cub)
 {
 	// cub->ray->pos.x += ray->delta_dist.x * 5;
 	// cub->ray->pos.y += ray->delta_dist.y * 5;
-	if(cub->map->map[(int)(cub->ray->pos.x + cub->ray->dir.x * 0.5)][(int)(cub->ray->pos.y)] == '0')
-		cub->ray->pos.x += cub->ray->dir.x * 0.5;
-	if(cub->map->map[(int)(cub->ray->pos.x)][(int)(cub->ray->pos.y + cub->ray->dir.y * 0.5)] == '0')
-		cub->ray->pos.y += cub->ray->dir.y * 0.5;
+	printf("(*cub)->ray->pos.x : %d\n", (int)((*cub)->ray->pos.x));
+	if((*cub)->map->map[(int)((*cub)->ray->pos.x + (*cub)->ray->dir.x * 0.5)][(int)((*cub)->ray->pos.y)] == '0')
+	{
+		printf("yuyu\n");
+		(*cub)->ray->pos.x += (*cub)->ray->dir.x * 0.5;
+		printf("zuzu\n");
+	}
+	if((*cub)->map->map[(int)((*cub)->ray->pos.x)][(int)((*cub)->ray->pos.y + (*cub)->ray->dir.y * 0.5)] == '0')
+	{
+		printf("yuyu 2\n");
+		(*cub)->ray->pos.y += (*cub)->ray->dir.y * 0.5;
+		printf("zuzu 2\n");
+	}
 }
 
-void	hook_down(t_cub *cub, int key)
+void	hook_down(t_cub **cub)
 {
 	// cub->ray->pos.x -= ray->delta_dist.x * 5;
 	// cub->ray->pos.y -= ray->delta_dist.y * 5;
 	//if(worldMap[int(posX - dirX * moveSpeed)][int(posY)] == false)
-	if (cub->map->map[(int)(cub->ray->pos.x - cub->ray->dir.x * 0.5)][cub->ray->pos.y] == '0')
-		cub->ray->pos.x -= cub->ray->dir.x * 0.5;
+	if ((*cub)->map->map[(int)((*cub)->ray->pos.x - (*cub)->ray->dir.x * 0.5)][(int)((*cub)->ray->pos.y)] == '0')
+		(*cub)->ray->pos.x -= (*cub)->ray->dir.x * 0.5;
 	//if(worldMap[int(posX)][int(posY - dirY * moveSpeed)] == false)
-	if (cub->map->map[cub->ray->pos.x][(int)(cub->ray->pos.y - cub->ray->dir.y * 0.5)] == '0')
-		cub->ray->pos.y -= cub->ray->dir.y * 0.5;
+	if ((*cub)->map->map[(int)((*cub)->ray->pos.x)][(int)((*cub)->ray->pos.y - (*cub)->ray->dir.y * 0.5)] == '0')
+		(*cub)->ray->pos.y -= (*cub)->ray->dir.y * 0.5;
 }
 
 // i dont know what to do :D
-void	hook_left(t_cub *cub, int key)
+void	hook_left(t_cub **cub)
 {
 	double	old_dir;
 	double	old_plane;
 
-	old_dir = cub->ray->dir.x;
-	cub->ray->dir.x = cub->ray->dir.x * cos(0.3) -  cub->ray->dir.y * sin(0.3);
-	cub->ray->dir.y = old_dir * sin(0.3) + cub->ray->dir.y * cos(0.3);
-	old_plane = cub->ray->camera.x;
-	cub->ray->camera.x = cub->ray->camera.x * cos(0.3) - cub->ray->camera.y * sin(0.3);
-	cub->ray->camera.y = old_plane * sin(0.3) + cub->ray->camera.y * cos(0.3);
-	// blop blop
-	// blop blop
-	// blop blop
-	// blop blop
-	// blop blop
-	// blop blop
-	//blo p bl o p
-	//b l op b l op
-	// blopblopblopblop
-	//blopblopblopb
-	// blop blop
-	//blopblopblop
-	//blopblllopbloop
+	old_dir = (*cub)->ray->dir.x;
+	(*cub)->ray->dir.x = (*cub)->ray->dir.x * cos(0.3) -  (*cub)->ray->dir.y * sin(0.3);
+	(*cub)->ray->dir.y = old_dir * sin(0.3) + (*cub)->ray->dir.y * cos(0.3);
+	old_plane = (*cub)->ray->plane.x;
+	(*cub)->ray->plane.x = (*cub)->ray->plane.x * cos(0.3) - (*cub)->ray->plane.y * sin(0.3);
+	(*cub)->ray->plane.y = old_plane * sin(0.3) + (*cub)->ray->plane.y * cos(0.3);
 	//both camera direction and camera plane must be rotated
 	// double oldDirX = dirX;
 	// dirX = dirX * cos(rotSpeed) - dirY * sin(rotSpeed);
@@ -65,17 +61,17 @@ void	hook_left(t_cub *cub, int key)
 	// planeY = oldPlaneX * sin(rotSpeed) + planeY * cos(rotSpeed);
 }
 
-void	hook_right(t_cub *cub, int key)
+void	hook_right(t_cub **cub)
 {
 	double	old_dir;
 	double	old_plane;
 
-	old_dir = cub->ray->dir.x;
-	cub->ray->dir.x = cub->ray->dir.x * cos(-0.3) -  cub->ray->dir.y * sin(-0.3);
-	cub->ray->dir.y = old_dir * sin(-0.3) + cub->ray->dir.y * cos(-0.3);
-	old_plane = cub->ray->camera.x;
-	cub->ray->camera.x = cub->ray->camera.x * cos(-0.3) - cub->ray->camera.y * sin(-0.3);
-	cub->ray->camera.y = old_plane * sin(-0.3) + cub->ray->camera.y * cos(-0.3);
+	old_dir = (*cub)->ray->dir.x;
+	(*cub)->ray->dir.x = (*cub)->ray->dir.x * cos(-0.3) -  (*cub)->ray->dir.y * sin(-0.3);
+	(*cub)->ray->dir.y = old_dir * sin(-0.3) + (*cub)->ray->dir.y * cos(-0.3);
+	old_plane = (*cub)->ray->plane.x;
+	(*cub)->ray->plane.x = (*cub)->ray->plane.x * cos(-0.3) - (*cub)->ray->plane.y * sin(-0.3);
+	(*cub)->ray->plane.y = old_plane * sin(-0.3) + (*cub)->ray->plane.y * cos(-0.3);
 	//both camera direction and camera plane must be rotated
 	// double oldDirX = dirX;
 	// dirX = dirX * cos(-rotSpeed) - dirY * sin(-rotSpeed);

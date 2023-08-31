@@ -21,6 +21,7 @@
 # define BUTTONPRESS 4
 # define BUTTONRELEASE 5
 # define MKEYPRESS 1L
+# define ESC 65307
 
 enum {
 	ON_KEYDOWN = 2,
@@ -30,16 +31,17 @@ enum {
 	ON_MOUSEMOVE = 6,
 	ON_EXPOSE = 12,
 	ON_DESTROY = 17,
-	A = 33,
-	W = 44,
-	S = 55,
-	D = 66
+	A = 97,
+	W = 119,
+	S = 115,
+	D = 100
 };
 
 typedef struct s_vec2
 {
 	int			x;
 	int			y;
+	int			color;
 }				t_vec2;
 
 typedef struct s_vec2d
@@ -89,14 +91,15 @@ typedef struct s_mlx
 
 typedef struct s_ray
 {
-	t_vec2	pos;
-	t_vec2	dir;
+	t_vec2d	pos;
+	t_vec2d	dir;
 	t_vec2	step;
 	t_vec2	map;
 	t_vec2d	ray_dir;
+	t_vec2d	plane;
 	t_vec2d	delta_dist;
 	t_vec2d	side_dist;
-	t_vec2d	camera;
+	double	cameraX;
 	int		hit;
 	int		side;
 }			t_ray;
@@ -104,7 +107,7 @@ typedef struct s_ray
 typedef struct s_cub
 {
 	t_map	*map;
-	t_mlx	*mlx;
+	t_mlx	mlx;
 	t_ray	*ray;
 }			t_cub;
 
@@ -131,10 +134,11 @@ int		empty_line(char *line);
 char	*ignore_empty_lines(char *line, int fd);
 int		put_color(t_color *color, char *line);
 void	init_color(t_color *color);
+int		get_color(t_ray **ray, t_cub *cub);
 int		check_colors(char **rgb, t_color *color);
 
 /*----display utils----*/
-int		ft_key_choose(int key, t_cub *cub);
+int		ft_key_choose(int key, t_cub **cub);
 int		mouse_hook(t_cub *cub);
 void	clear_screen(t_cub *cub);
 void	ft_close(t_cub *cub);
@@ -143,6 +147,12 @@ void	draw_line(t_cub *cub, t_vec2 p1, t_vec2 p2);
 
 int		draw_cub(t_cub *cub);
 t_cub	*init_cub(t_map *map);
-int		ft_key_choose(int key, t_cub *cub);
+int		ft_key_choose(int key, t_cub **cub);
+
+/*----hooks----*/
+void	hook_up(t_cub **cub);
+void	hook_down(t_cub **cub);
+void	hook_left(t_cub **cub);
+void	hook_right(t_cub **cub);
 
 #endif

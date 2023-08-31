@@ -2,7 +2,9 @@ CC			= cc
 
 NAME		= cub3d
 
-SOURCES_DISPLAY		=	hooks.c			\
+SOURCES_DISPLAY		=	draw_cub.c		\
+						draw_line.c		\
+						hooks.c			\
 						init_cub.c		\
 
 SOURCES_PARSING 	=	parse.c			\
@@ -37,6 +39,7 @@ OBJS = $(OBJS_PARSING) $(OBJS_UTILS) $(OBJS_DISPLAY)
 all: lib obj $(NAME)
 
 lib:
+	@make -C $(MLX)
 	@make -C $(LIBFT)
 
 $(NAME): $(OBJS)
