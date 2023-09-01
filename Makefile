@@ -1,13 +1,12 @@
-CC			= cc
+CC		= cc
 NAME		= cub3d
 UNAME 		:= $(shell uname)
 
-# Add some color for output
-RED			= \033[0;31m
+RED		= \033[0;31m
 GREEN		= \033[0;32m
 YELLOW		= \033[0;33m
 PURPLE		= \033[0;35m
-NC			= \033[0m # No Color
+NC		= \033[0m
 
 SOURCES_DISPLAY		=	draw_cub.c		\
 						draw_line.c		\
