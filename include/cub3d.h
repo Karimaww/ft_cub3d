@@ -24,7 +24,8 @@
 // # define ESC 65307
 # define ESC 53
 
-# define SPEED 0.08
+# define SPEED 0.05
+# define ANGLE 0.05
 
 enum {
 	ON_KEYDOWN = 2,
