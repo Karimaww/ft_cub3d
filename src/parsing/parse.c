@@ -121,5 +121,6 @@ t_map	*parse(char *path)
 		return (free_map(map), NULL);
 	if (check_player(map) == EXIT_FAILURE)
 		return (free_map(map), NULL);
+	//close(fd);
 	return (map);
 }

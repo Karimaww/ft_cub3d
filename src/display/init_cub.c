@@ -24,6 +24,7 @@ int	init_mlx(t_cub **cub)
 t_cub	*init_cub(t_map *map)
 {
 	t_cub	*cub;
+	t_ray	*ray;
 
 	cub = (t_cub *)malloc(sizeof(t_cub));
 	if (!cub)
@@ -35,11 +36,14 @@ t_cub	*init_cub(t_map *map)
 		return (NULL);
 	//fdf->theme = &default_theme;
 	//init_view(fdf);
-	if (draw_cub(cub) == EXIT_FAILURE)
+	ray = NULL;
+	if (init_ray(&ray, cub) == EXIT_FAILURE)
 		return (NULL);
-	printf("here OYOOOO\n");
+	if (draw_cub(cub, ray) == EXIT_FAILURE)
+		return (NULL);
 	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
 	mlx_hook(cub->mlx.win, ON_DESTROY, MKEYPRESS, mouse_hook, cub);
 	mlx_hook(cub->mlx.win, ON_KEYDOWN, MKEYPRESS, ft_key_choose, cub);
+	//mlx_loop(cub->mlx.mlx);
 	return (cub);
 }

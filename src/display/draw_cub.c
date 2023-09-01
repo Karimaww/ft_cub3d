@@ -7,13 +7,14 @@ int	init_ray(t_ray **ray, t_cub *cub)
 		return (printf("Error : Malloc of t_ray.n"), EXIT_FAILURE);
 	cub->ray = *ray;
 	//x and y start position
-	(*ray)->pos.x = cub->map->player.x;
-	(*ray)->pos.y = cub->map->player.y;
+	(*ray)->pos = malloc(sizeof(t_vec2));
+	(*ray)->pos->x = cub->map->player.x;
+	(*ray)->pos->y = cub->map->player.y;
 	//initial direction vector
 	(*ray)->dir.x = -1;
 	(*ray)->dir.y = 0;
 	//the 2d raycaster version of camera plane
-	(*ray)->cameraX = 0;
+	(*ray)->camera_x = 0;
 	//the 2d raycaster version of camera plane//the 2d raycaster version of camera plane
 	(*ray)->plane.x = 0;
 	(*ray)->plane.y = 0.66;
@@ -23,12 +24,12 @@ int	init_ray(t_ray **ray, t_cub *cub)
 void	init_raydir(t_ray **ray, t_cub *cub, int x)
 {
 	//calculate ray position and direction
-	(*ray)->cameraX = 2 * x / cub->mlx.win_size.x - 1; //x-coordinate in camera space
-	(*ray)->ray_dir.x = (*ray)->dir.x + (*ray)->plane.x * (*ray)->cameraX;
-	(*ray)->ray_dir.y = (*ray)->dir.y + (*ray)->plane.y * (*ray)->cameraX;
+	(*ray)->camera_x = 2 * x / (double)(cub->mlx.win_size.x) - 1; //x-coordinate in camera space
+	(*ray)->ray_dir.x = (*ray)->dir.x + (*ray)->plane.x * (*ray)->camera_x;
+	(*ray)->ray_dir.y = (*ray)->dir.y + (*ray)->plane.y * (*ray)->camera_x;
 	//which box of the map we're in
-	(*ray)->map.x = (*ray)->pos.x;
-	(*ray)->map.y = (*ray)->pos.y;
+	(*ray)->map.x = (int)((*ray)->pos->x);
+	(*ray)->map.y = (int)((*ray)->pos->y);
 
 	//length of ray from one x or y-side to next x or y-side
 	if ((*ray)->ray_dir.x == 0)
@@ -46,25 +47,25 @@ void	init_side_dist(t_ray **ray, t_cub *cub)
 	if ((*ray)->ray_dir.x < 0)
 	{
 		(*ray)->step.x = -1;
-		(*ray)->side_dist.x = ((*ray)->pos.x - cub->map->player.x)
+		(*ray)->side_dist.x = ((*ray)->pos->x - cub->map->player.x)
 			* (*ray)->delta_dist.x;
 	}
 	else
 	{
 		(*ray)->step.x = 1;
-		(*ray)->side_dist.x = (cub->map->player.x + 1.0 - (*ray)->pos.x)
+		(*ray)->side_dist.x = (cub->map->player.x + 1.0 - (*ray)->pos->x)
 			* (*ray)->delta_dist.x;
 	}
 	if ((*ray)->ray_dir.y < 0)
 	{
 		(*ray)->step.y = -1;
-		(*ray)->side_dist.y = ((*ray)->pos.y - cub->map->player.y)
+		(*ray)->side_dist.y = ((*ray)->pos->y - cub->map->player.y)
 			* (*ray)->delta_dist.y;
 	}
 	else
 	{
 		(*ray)->step.y = 1;
-		(*ray)->side_dist.y = (cub->map->player.y + 1.0 - (*ray)->pos.y)
+		(*ray)->side_dist.y = (cub->map->player.y + 1.0 - (*ray)->pos->y)
 			* (*ray)->delta_dist.y;
 	}
 }
@@ -129,10 +130,10 @@ void	show_line(t_ray **ray, t_cub *cub, int x)
 
 	//calculate lowest and highest pixel to fill in current stripe
 	draw_start = -line_h / 2 + cub->mlx.win_size.y / 2;
-	if(draw_start < 0)
+	if (draw_start < 0)
 		draw_start = 0;
 	draw_end = line_h / 2 + cub->mlx.win_size.y / 2;
-	if(draw_end >= cub->mlx.win_size.y)
+	if (draw_end >= cub->mlx.win_size.y)
 		draw_end = cub->mlx.win_size.y - 1;
 
 	//draw the pixels of the stripe as a vertical line
@@ -151,19 +152,19 @@ void	show_line(t_ray **ray, t_cub *cub, int x)
 			color = (color >> 1) & 8355711;
 		}
 		// buffer[y][x] = color;
-		pixel_put(&(cub->mlx), x, y,color);
+		pixel_put(&(cub->mlx), x, y, color);
 	}
 }
 
-int	draw_cub(t_cub *cub)
+int	draw_cub(t_cub *cub, t_ray *ray)
 {
-	t_ray	*ray;
+	//t_ray	*ray;
 	int		x;
 
 	x = 0;
-	ray = NULL;
-	if (init_ray(&ray, cub) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
+	//ray = NULL;
+	//if (init_ray(&ray, cub) == EXIT_FAILURE)
+	//	return (EXIT_FAILURE);
 	while (x < cub->mlx.win_size.x)
 	{
 		init_raydir(&ray, cub, x);

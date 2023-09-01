@@ -2,14 +2,14 @@
 
 char	*repeat_char(char c, int n)
 {
-    char	*str;
-	
+	char	*str;
+
 	str = (char *)malloc(n + 1);
-    if (!str)
-		return NULL;
+	if (!str)
+		return (NULL);
 	memset(str, c, n);
-    str[n] = '\0';
-    return (str);
+	str[n] = '\0';
+	return (str);
 }
 
 int	space_extension(char **map, int x)

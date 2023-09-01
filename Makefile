@@ -1,6 +1,13 @@
 CC			= cc
-
 NAME		= cub3d
+UNAME 		:= $(shell uname)
+
+# Add some color for output
+RED			= \033[0;31m
+GREEN		= \033[0;32m
+YELLOW		= \033[0;33m
+PURPLE		= \033[0;35m
+NC			= \033[0m # No Color
 
 SOURCES_DISPLAY		=	draw_cub.c		\
 						draw_line.c		\
@@ -18,60 +25,68 @@ SOURCES_UTILS 		=	lst_utils.c		\
 						mlx_utils.c		\
 
 LIBFT		= libft
-
 MLX			= mlx
 
 CFLAGS		= -Wall -Wextra -Werror -g3
 
 INCLUDE		= include
-
 SRC_DIR		= src
-
 OBJ_DIR		= obj
 
 RM			= rm -f
 
-OBJS_PARSING = $(addprefix $(OBJ_DIR)/parsing/,$(SOURCES_PARSING:.c=.o))
-OBJS_UTILS = $(addprefix $(OBJ_DIR)/utils/,$(SOURCES_UTILS:.c=.o))
-OBJS_DISPLAY = $(addprefix $(OBJ_DIR)/display/,$(SOURCES_DISPLAY:.c=.o))
+OBJS_PARSING = $(addprefix $(OBJ_DIR)/parsing/, $(SOURCES_PARSING:.c=.o))
+OBJS_UTILS = $(addprefix $(OBJ_DIR)/utils/, $(SOURCES_UTILS:.c=.o))
+OBJS_DISPLAY = $(addprefix $(OBJ_DIR)/display/, $(SOURCES_DISPLAY:.c=.o))
 OBJS = $(OBJS_PARSING) $(OBJS_UTILS) $(OBJS_DISPLAY)
 
-all: lib obj $(NAME)
+all: intro lib obj $(NAME)
+
+intro:
+	@echo "$(GREEN)Compiling $(NAME)...$(NC)"
 
 lib:
+	@echo "$(YELLOW)Compiling libraries...$(NC)"
 	@make -C $(MLX)
 	@make -C $(LIBFT)
 
+ifeq ($(UNAME), Darwin)
+    LDFLAGS := -L $(LIBFT) -lft -L $(MLX) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+else
+    LDFLAGS := -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
+endif
+
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -L $(LIBFT) -lft -L $(MLX) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
-
-#$(CC) $(OBJS) -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
-#$(CC) $(OBJS) -L $(LIBFT) -lft -lncurses -o $(NAME)
-
-#$(CC) $(OBJS) -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
+	@echo "$(YELLOW)Linking objects...$(NC)"
+	$(CC) $(OBJS) $(LDFLAGS)
+	@echo "$(PURPLE)Compilation successful!$(NC)"
 
 obj:
-	mkdir -p $(OBJ_DIR) $(OBJ_DIR)/parsing $(OBJ_DIR)/utils $(OBJ_DIR)/display
+	@echo "$(YELLOW)Creating object directories...$(NC)"
+	@mkdir -p $(OBJ_DIR) $(OBJ_DIR)/parsing $(OBJ_DIR)/utils $(OBJ_DIR)/display
 
 $(OBJ_DIR)/parsing/%.o: $(SRC_DIR)/parsing/%.c $(INCLUDE)/cub3d.h Makefile
-	$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
+	@echo "    $(GREEN)Compiling $<$(NC)"
+	@$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
 
 $(OBJ_DIR)/utils/%.o: $(SRC_DIR)/utils/%.c $(INCLUDE)/cub3d.h Makefile
-	$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
+	@echo "    $(GREEN)Compiling $<$(NC)"
+	@$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
 
 $(OBJ_DIR)/display/%.o: $(SRC_DIR)/display/%.c $(INCLUDE)/cub3d.h Makefile
-	$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
-
-bonus: $(NAME)
+	@echo "    $(GREEN)Compiling $<$(NC)"
+	@$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
 
 clean:
-	make clean -C $(LIBFT)
-	rm -rf $(OBJ_DIR)
+	@echo "$(RED)Cleaning up...$(NC)"
+	@make clean -C $(LIBFT)
+	@$(RM) -rf $(OBJ_DIR)
 
 fclean: clean
-	rm -f $(NAME)
-	make fclean -C $(LIBFT)
+	@echo "$(RED)Full cleaning...$(NC)"
+	@$(RM) -f $(NAME)
+	@make fclean -C $(LIBFT)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all intro clean fclean re lib obj
