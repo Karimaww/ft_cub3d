@@ -43,20 +43,21 @@ void	clear_screen(t_cub *cub)
 
 int	ft_key_choose(int key, t_cub *cub)
 {
-	// printf("key : %d\n", key);
+	printf("key : %d\n", key);
 	if (key == ESC)
 		ft_close(cub);
-	if (key == W){
-		//printf("hereeeeee pos x : %f\n", cub->ray->pos.x);
-		hook_up(cub);
-		printf("pos x : %f\n", cub->ray->pos->x);
-	}
+	if (key == W)
+		forward(cub);
 	if (key == A)
-		hook_left(cub);
+		left(cub);
 	if (key == S)
-		hook_down(cub);
+		back(cub);
 	if (key == D)
-		hook_right(cub);
+		right(cub);
+	if (key == RL)
+		rot_left(cub);
+	if (key == RR)
+		rot_right(cub);
 	clear_screen(cub);
 	draw_cub(cub, cub->ray);
 	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);

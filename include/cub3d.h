@@ -9,13 +9,13 @@
 # include "../mlx/mlx.h"
 # include <stdbool.h>
 # include <stdio.h>
+
 # define RGB_RED 0xFFA07A
 # define RGB_BLACK 0x000000
 # define RGB_GREEN 	0x7CFC00
-// # include "colors.h"
-// # include "events.h"
+# define RGB_SKY 0x7BCAEC
+# define RGB_FLOOR 0x1957B5
 
-// look up 
 # define KEYPRESS 2
 # define KEYRELEASE 3
 # define BUTTONPRESS 4
@@ -23,6 +23,8 @@
 # define MKEYPRESS 1L
 // # define ESC 65307
 # define ESC 53
+
+# define SPEED 0.08
 
 enum {
 	ON_KEYDOWN = 2,
@@ -39,7 +41,9 @@ enum {
 	A = 0,
 	W = 13,
 	S = 1,
-	D = 2
+	D = 2,
+	RL = 123,
+	RR = 124
 };
 
 typedef struct s_vec2
@@ -96,14 +100,20 @@ typedef struct s_mlx
 
 typedef struct s_ray
 {
-	t_vec2d	*pos;
-	t_vec2d	dir;
 	t_vec2	step;
 	t_vec2	map;
+	t_vec2d	pos;
+	t_vec2d	dir;
 	t_vec2d	ray_dir;
 	t_vec2d	plane;
 	t_vec2d	delta_dist;
 	t_vec2d	side_dist;
+	t_vec2d	ray_dir0;
+	t_vec2d	ray_dir1;
+	t_vec2d	floor;
+	t_vec2d	floor_step;
+	double	pos_z;
+	double	row_dist;
 	double	camera_x;
 	int		hit;
 	int		side;
@@ -154,15 +164,21 @@ int		draw_cub(t_cub *cub, t_ray *ray);
 int		init_ray(t_ray **ray, t_cub *cub);
 t_cub	*init_cub(t_map *map);
 
-/*----hooks----*/
-void	hook_up(t_cub *cub);
-void	hook_down(t_cub *cub);
-void	hook_left(t_cub *cub);
-void	hook_right(t_cub *cub);
+/*-----wall------*/
+void	init_raydir(t_ray **ray, t_cub *cub, int x);
+void	init_side_dist(t_ray **ray, t_cub *cub);
+void	dda_algo(t_ray **ray, t_cub *cub);
+int		get_color(t_ray **ray, t_cub *cub);
+void	show_line(t_ray **ray, t_cub *cub, int x);
 
-// void	hook_up(t_cub **cub);
-// void	hook_down(t_cub **cub);
-// void	hook_left(t_cub **cub);
-// void	hook_right(t_cub **cub);
+void	draw_back(t_cub *cub, t_ray **ray);
+
+/*----hooks----*/
+void	forward(t_cub *cub);
+void	back(t_cub *cub);
+void	left(t_cub *cub);
+void	right(t_cub *cub);
+void	rot_left(t_cub *cub);
+void	rot_right(t_cub *cub);
 
 #endif

@@ -21,6 +21,26 @@ int	init_mlx(t_cub **cub)
 	return (EXIT_SUCCESS);
 }
 
+int	init_ray(t_ray **ray, t_cub *cub)
+{
+	*ray = malloc(sizeof(t_ray));
+	if (!*ray)
+		return (printf("Error : Malloc of t_ray.n"), EXIT_FAILURE);
+	cub->ray = *ray;
+	//x and y start position
+	(*ray)->pos.x = cub->map->player.x;
+	(*ray)->pos.y = cub->map->player.y;
+	//initial direction vector
+	(*ray)->dir.x = -1;
+	(*ray)->dir.y = 0;
+	//the 2d raycaster version of camera plane
+	(*ray)->camera_x = 0;
+	//the 2d raycaster version of camera plane//the 2d raycaster version of camera plane
+	(*ray)->plane.x = 0;
+	(*ray)->plane.y = 0.66;
+	return (EXIT_SUCCESS);
+}
+
 t_cub	*init_cub(t_map *map)
 {
 	t_cub	*cub;

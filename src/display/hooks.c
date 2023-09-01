@@ -1,30 +1,46 @@
 #include "cub3d.h"
 
-void	hook_up(t_cub *cub)
+void	forward(t_cub *cub)
 {
-	if (cub->map->map[(int)(cub->ray->pos->x + cub->ray->dir.x * 0.25)]
-		[(int)(cub->ray->pos->y)] == '0')
-	{
-		cub->ray->pos->x += cub->ray->dir.x * 0.25;
-	}
-	if (cub->map->map[(int)(cub->ray->pos->x)]
-		[(int)(cub->ray->pos->y + cub->ray->dir.y * 0.25)] == '0')
-	{
-		cub->ray->pos->y += cub->ray->dir.y * 0.25;
-	}
+	if (cub->map->map[(int)(cub->ray->pos.x + cub->ray->dir.x * SPEED)]
+		[(int)(cub->ray->pos.y)] != '1')
+		cub->ray->pos.x += cub->ray->dir.x * SPEED;
+	if (cub->map->map[(int)(cub->ray->pos.x)]
+		[(int)(cub->ray->pos.y + cub->ray->dir.y * SPEED)] != '1')
+		cub->ray->pos.y += cub->ray->dir.y * SPEED;
 }
 
-void	hook_down(t_cub *cub)
+void	back(t_cub *cub)
 {
-	if (cub->map->map[(int)(cub->ray->pos->x - cub->ray->dir.x * 0.25)]
-		[(int)(cub->ray->pos->y)] == '0')
-		cub->ray->pos->x -= cub->ray->dir.x * 0.25;
-	if (cub->map->map[(int)(cub->ray->pos->x)]
-		[(int)(cub->ray->pos->y - cub->ray->dir.y * 0.25)] == '0')
-		cub->ray->pos->y -= cub->ray->dir.y * 0.25;
+	if (cub->map->map[(int)(cub->ray->pos.x - cub->ray->dir.x * SPEED)]
+		[(int)(cub->ray->pos.y)] != '1')
+		cub->ray->pos.x -= cub->ray->dir.x * SPEED;
+	if (cub->map->map[(int)(cub->ray->pos.x)]
+		[(int)(cub->ray->pos.y - cub->ray->dir.y * SPEED)] != '1')
+		cub->ray->pos.y -= cub->ray->dir.y * SPEED;
 }
 
-void	hook_left(t_cub *cub)
+void	left(t_cub *cub)
+{
+	if (cub->map->map[(int)(cub->ray->pos.x - cub->ray->plane.x * SPEED)]
+		[(int)(cub->ray->pos.y)] != '1')
+		cub->ray->pos.x -= cub->ray->plane.x * SPEED;
+	if (cub->map->map[(int)(cub->ray->pos.x)]
+		[(int)(cub->ray->pos.y - cub->ray->plane.y * SPEED)] != '1')
+		cub->ray->pos.y -= cub->ray->plane.y * SPEED;
+}
+
+void	right(t_cub *cub)
+{
+	if (cub->map->map[(int)(cub->ray->pos.x + cub->ray->plane.x * SPEED)]
+		[(int)(cub->ray->pos.y)] != '1')
+		cub->ray->pos.x += cub->ray->plane.x * SPEED;
+	if (cub->map->map[(int)(cub->ray->pos.x)]
+		[(int)(cub->ray->pos.y + cub->ray->plane.y * SPEED)] != '1')
+		cub->ray->pos.y += cub->ray->plane.y * SPEED;
+}
+
+void	rot_left(t_cub *cub)
 {
 	double	old_dir;
 	double	old_plane;
@@ -39,7 +55,7 @@ void	hook_left(t_cub *cub)
 	cub->ray->plane.y = old_plane * sin(0.08) + cub->ray->plane.y * cos(0.08);
 }
 
-void	hook_right(t_cub *cub)
+void	rot_right(t_cub *cub)
 {
 	double	old_dir;
 	double	old_plane;

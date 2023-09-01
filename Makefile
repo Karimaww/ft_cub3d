@@ -10,6 +10,8 @@ PURPLE		= \033[0;35m
 NC			= \033[0m # No Color
 
 SOURCES_DISPLAY		=	draw_cub.c		\
+						draw_back.c		\
+						draw_wall.c		\
 						draw_line.c		\
 						hooks.c			\
 						init_cub.c		\
