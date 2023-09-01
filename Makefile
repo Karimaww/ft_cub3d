@@ -43,7 +43,9 @@ lib:
 	@make -C $(LIBFT)
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
+	$(CC) $(OBJS) -L $(LIBFT) -lft -L $(MLX) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+
+#$(CC) $(OBJS) -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
 #$(CC) $(OBJS) -L $(LIBFT) -lft -lncurses -o $(NAME)
 
 #$(CC) $(OBJS) -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
