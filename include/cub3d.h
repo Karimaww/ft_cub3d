@@ -21,12 +21,12 @@
 # define BUTTONPRESS 4
 # define BUTTONRELEASE 5
 # define MKEYPRESS 1L
-// # define ESC 65307
-# define ESC 53
 
-# define SPEED 0.05
+# define SPEED 0.1
 # define ANGLE 0.05
 
+#ifdef __linux__
+# define ESC 65307
 enum {
 	ON_KEYDOWN = 2,
 	ON_KEYUP = 3,
@@ -35,10 +35,23 @@ enum {
 	ON_MOUSEMOVE = 6,
 	ON_EXPOSE = 12,
 	ON_DESTROY = 17,
-	// A = 97,
-	// W = 119,
-	// S = 115,
-	// D = 100
+	A = 97,
+	W = 119,
+	S = 115,
+	D = 100,
+	RL = 65361,
+	RR = 65363
+};
+#else
+	# define ESC 53
+    enum {
+	ON_KEYDOWN = 2,
+	ON_KEYUP = 3,
+	ON_MOUSEDOWN = 4,
+	ON_MOUSEUP = 5,
+	ON_MOUSEMOVE = 6,
+	ON_EXPOSE = 12,
+	ON_DESTROY = 17,
 	A = 0,
 	W = 13,
 	S = 1,
@@ -46,6 +59,7 @@ enum {
 	RL = 123,
 	RR = 124
 };
+#endif
 
 typedef struct s_vec2
 {
@@ -116,13 +130,24 @@ typedef struct s_ray
 	double	pos_z;
 	double	row_dist;
 	double	camera_x;
+	int		draw_start;
+	int		draw_end;
 	int		hit;
 	int		side;
 }			t_ray;
 
+typedef struct s_txt
+{
+	t_mlx	north;
+	t_mlx	south;
+	t_mlx	west;
+	t_mlx	east;
+}			t_txt;
+
 typedef struct s_cub
 {
 	t_map	*map;
+	t_txt	*texture;
 	t_mlx	mlx;
 	t_ray	*ray;
 }			t_cub;
@@ -164,17 +189,20 @@ void	draw_line(t_cub *cub, t_vec2 p1, t_vec2 p2);
 int		draw_cub(t_cub *cub, t_ray *ray);
 int		init_ray(t_ray **ray, t_cub *cub);
 t_cub	*init_cub(t_map *map);
+t_txt	*init_textures(t_cub *cub);
 
 /*-----wall------*/
 void	init_raydir(t_ray **ray, t_cub *cub, int x);
-void	init_side_dist(t_ray **ray, t_cub *cub);
+void	init_side_dist(t_ray **ray);
 void	dda_algo(t_ray **ray, t_cub *cub);
 int		get_color(t_ray **ray, t_cub *cub);
 void	show_line(t_ray **ray, t_cub *cub, int x);
 
 void	draw_back(t_cub *cub, t_ray **ray);
+void	draw_stripe(t_ray **ray, t_cub *cub, int x);
 
 /*----hooks----*/
+int		check_move(double val, double start, double end);
 void	forward(t_cub *cub);
 void	back(t_cub *cub);
 void	left(t_cub *cub);

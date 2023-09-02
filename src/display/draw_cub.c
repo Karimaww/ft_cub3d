@@ -12,7 +12,7 @@ int	draw_cub(t_cub *cub, t_ray *ray)
 	{
 		init_raydir(&ray, cub, x);
 		//calculate step and initial sideDist
-		init_side_dist(&ray, cub);
+		init_side_dist(&ray);
 		dda_algo(&ray, cub);
 		show_line(&ray, cub, x);
 		x++;

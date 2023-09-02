@@ -13,7 +13,7 @@ void	ft_close(t_cub *cub)
 		mlx_destroy_window(cub->mlx.mlx, cub->mlx.win);
 	if (cub->mlx.mlx)
 	{
-		//mlx_destroy_display(cub->mlx.mlx);
+		mlx_destroy_display(cub->mlx.mlx);
 		free(cub->mlx.mlx);
 	}
 	if (cub->ray)

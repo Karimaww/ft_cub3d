@@ -8,12 +8,14 @@ YELLOW		= \033[0;33m
 PURPLE		= \033[0;35m
 NC		= \033[0m
 
-SOURCES_DISPLAY		=	draw_cub.c		\
-						draw_back.c		\
+SOURCES_DISPLAY		=	draw_back.c		\
+						draw_cub.c		\
+						draw_stripe.c	\
 						draw_wall.c		\
-						draw_line.c		\
-						hooks.c			\
 						init_cub.c		\
+						init_textures.c	\
+						move.c			\
+						rotate.c		\
 
 SOURCES_PARSING 	=	parse.c			\
 						parse_params.c	\

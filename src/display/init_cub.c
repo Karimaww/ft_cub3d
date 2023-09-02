@@ -54,8 +54,9 @@ t_cub	*init_cub(t_map *map)
 	cub->mlx.win_size.y = 800;
 	if (init_mlx(&cub) == EXIT_FAILURE)
 		return (NULL);
-	//fdf->theme = &default_theme;
-	//init_view(fdf);
+	cub->texture = init_textures(cub);
+	if (!cub->texture)
+		return (printf("\nHERE\n"), NULL);
 	ray = NULL;
 	if (init_ray(&ray, cub) == EXIT_FAILURE)
 		return (NULL);

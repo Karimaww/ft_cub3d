@@ -19,32 +19,32 @@ void	init_raydir(t_ray **ray, t_cub *cub, int x)
 	(*ray)->delta_dist.y = fabs(1 / (*ray)->ray_dir.y);
 }
 
-void	init_side_dist(t_ray **ray, t_cub *cub)
+void	init_side_dist(t_ray **ray)
 {
 	//length of ray from current position to next x or y-side
 	//what direction to step in x or y-direction (either +1 or -1)
 	if ((*ray)->ray_dir.x < 0)
 	{
 		(*ray)->step.x = -1;
-		(*ray)->side_dist.x = ((*ray)->pos.x - cub->map->player.x)
+		(*ray)->side_dist.x = ((*ray)->pos.x - (*ray)->map.x)
 			* (*ray)->delta_dist.x;
 	}
 	else
 	{
 		(*ray)->step.x = 1;
-		(*ray)->side_dist.x = (cub->map->player.x + 1.0 - (*ray)->pos.x)
+		(*ray)->side_dist.x = ((*ray)->map.x + 1.0 - (*ray)->pos.x)
 			* (*ray)->delta_dist.x;
 	}
 	if ((*ray)->ray_dir.y < 0)
 	{
 		(*ray)->step.y = -1;
-		(*ray)->side_dist.y = ((*ray)->pos.y - cub->map->player.y)
+		(*ray)->side_dist.y = ((*ray)->pos.y - (*ray)->map.y)
 			* (*ray)->delta_dist.y;
 	}
 	else
 	{
 		(*ray)->step.y = 1;
-		(*ray)->side_dist.y = (cub->map->player.y + 1.0 - (*ray)->pos.y)
+		(*ray)->side_dist.y = ((*ray)->map.y + 1.0 - (*ray)->pos.y)
 			* (*ray)->delta_dist.y;
 	}
 }
@@ -95,8 +95,6 @@ void	show_line(t_ray **ray, t_cub *cub, int x)
 {
 	double	perp_dist;
 	int		line_h;
-	int		draw_start;
-	int		draw_end;
 
 	//Calculate distance projected on camera direction (Euclidean distance would give fisheye effect!)
 	if ((*ray)->side == 0)
@@ -106,19 +104,11 @@ void	show_line(t_ray **ray, t_cub *cub, int x)
 	//Calculate height of line to draw on screen
 	line_h = (int)(cub->mlx.win_size.y / perp_dist);
 	//calculate lowest and highest pixel to fill in current stripe
-	draw_start = -line_h / 2 + cub->mlx.win_size.y / 2;
-	if (draw_start < 0)
-		draw_start = 0;
-	draw_end = line_h / 2 + cub->mlx.win_size.y / 2;
-	if (draw_end >= cub->mlx.win_size.y)
-		draw_end = cub->mlx.win_size.y - 1;
-	//draw the pixels of the stripe as a vertical line
-	for(int y = draw_start; y < draw_end; y++)
-	{
-		int color;
-		color = get_color(ray, cub);
-		if ((*ray)->side == 1)
-			color = (color >> 1) & 8355711;
-		pixel_put(&(cub->mlx), x, y, color);
-	}
+	(*ray)->draw_start = -line_h / 2 + cub->mlx.win_size.y / 2;
+	if ((*ray)->draw_start < 0)
+		(*ray)->draw_start = 0;
+	(*ray)->draw_end = line_h / 2 + cub->mlx.win_size.y / 2;
+	if ((*ray)->draw_end >= cub->mlx.win_size.y)
+		(*ray)->draw_end = cub->mlx.win_size.y - 1;
+	draw_stripe(ray, cub, x);
 }
