@@ -32,15 +32,17 @@ int	free_lst(t_lst **lst)
 	t_lst	*tmp;
 
 	if (!*lst)
-		return (EXIT_SUCCESS);
+		return (printf("REEER\n"), EXIT_SUCCESS);
 	while (*lst)
 	{
+		printf("lst tab : %s\n", (*lst)->tab);
 		tmp = (*lst)->next;
 		if ((*lst)->tab)
 			free((*lst)->tab);
 		free(*lst);
 		*lst = tmp;
 	}
+	lst = NULL;
 	return (EXIT_SUCCESS);
 }
 

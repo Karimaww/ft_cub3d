@@ -13,6 +13,7 @@ SOURCES_DISPLAY		=	draw_back.c		\
 						draw_stripe.c	\
 						draw_wall.c		\
 						init_cub.c		\
+						init_rot.c		\
 						init_textures.c	\
 						move.c			\
 						rotate.c		\

@@ -28,8 +28,8 @@ int	init_ray(t_ray **ray, t_cub *cub)
 		return (printf("Error : Malloc of t_ray.n"), EXIT_FAILURE);
 	cub->ray = *ray;
 	//x and y start position
-	(*ray)->pos.x = cub->map->player.x;
-	(*ray)->pos.y = cub->map->player.y;
+	(*ray)->pos.x = cub->map->player.x + 0.5;
+	(*ray)->pos.y = cub->map->player.y + 0.5;
 	//initial direction vector
 	(*ray)->dir.x = -1;
 	(*ray)->dir.y = 0;
@@ -38,6 +38,7 @@ int	init_ray(t_ray **ray, t_cub *cub)
 	//the 2d raycaster version of camera plane//the 2d raycaster version of camera plane
 	(*ray)->plane.x = 0;
 	(*ray)->plane.y = 0.66;
+	init_rot(cub);
 	return (EXIT_SUCCESS);
 }
 
@@ -52,19 +53,18 @@ t_cub	*init_cub(t_map *map)
 	cub->map = map;
 	cub->mlx.win_size.x = 1200;
 	cub->mlx.win_size.y = 800;
-	if (init_mlx(&cub) == EXIT_FAILURE)
-		return (NULL);
-	cub->texture = init_textures(cub);
-	if (!cub->texture)
-		return (printf("\nHERE\n"), NULL);
 	ray = NULL;
+	cub->ray = ray;
+	if (init_mlx(&cub) == EXIT_FAILURE)
+		return (ft_close(cub), NULL);
+	if (init_textures(&cub) == EXIT_FAILURE)
+		return (ft_close(cub), NULL);
 	if (init_ray(&ray, cub) == EXIT_FAILURE)
-		return (NULL);
+		return (ft_close(cub), NULL);
 	if (draw_cub(cub, ray) == EXIT_FAILURE)
-		return (NULL);
+		return (ft_close(cub), NULL);
 	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
 	mlx_hook(cub->mlx.win, ON_DESTROY, MKEYPRESS, mouse_hook, cub);
 	mlx_hook(cub->mlx.win, ON_KEYDOWN, MKEYPRESS, ft_key_choose, cub);
-	//mlx_loop(cub->mlx.mlx);
 	return (cub);
 }

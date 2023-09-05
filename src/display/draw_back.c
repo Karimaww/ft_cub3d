@@ -24,6 +24,11 @@ void	init_floor(t_ray **ray, t_cub *cub, int y)
 	(*ray)->floor.y = (*ray)->pos.y + (*ray)->row_dist * (*ray)->ray_dir0.y;
 }
 
+int	create_rgb(int r, int g, int b)
+{
+	return (r << 16 | g << 8 | b);
+}
+
 void	draw_floor_line(t_cub *cub, t_ray **ray, int y)
 {
 	int	x;
@@ -35,12 +40,13 @@ void	draw_floor_line(t_cub *cub, t_ray **ray, int y)
 		(*ray)->floor.y += (*ray)->floor_step.y;
 		int color;
 		// Floor
-		color = RGB_FLOOR;
+		// color = RGB_FLOOR;
+		color = create_rgb(cub->map->f.r, cub->map->f.g, cub->map->f.b);
 		// if ((*ray)->side == 1)
 		// 	color = (color >> 1) & 8355711;
 		pixel_put(&(cub->mlx), x, y, color);
 		// Ceiling
-		color = RGB_SKY;
+		color = create_rgb(cub->map->c.r, cub->map->c.g, cub->map->c.b);
 		// if ((*ray)->side == 1)
 		// 	color = (color >> 1) & 8355711;
 		pixel_put(&(cub->mlx), x, cub->mlx.win_size.y - y - 1, color);

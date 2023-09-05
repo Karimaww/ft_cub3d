@@ -93,21 +93,18 @@ int	get_color(t_ray **ray, t_cub *cub)
 
 void	show_line(t_ray **ray, t_cub *cub, int x)
 {
-	double	perp_dist;
-	int		line_h;
-
 	//Calculate distance projected on camera direction (Euclidean distance would give fisheye effect!)
 	if ((*ray)->side == 0)
-		perp_dist = ((*ray)->side_dist.x - (*ray)->delta_dist.x);
+		(*ray)->perp_dist = ((*ray)->side_dist.x - (*ray)->delta_dist.x);
 	else
-		perp_dist = ((*ray)->side_dist.y - (*ray)->delta_dist.y);
+		(*ray)->perp_dist = ((*ray)->side_dist.y - (*ray)->delta_dist.y);
 	//Calculate height of line to draw on screen
-	line_h = (int)(cub->mlx.win_size.y / perp_dist);
+	(*ray)->line_h = (int)(cub->mlx.win_size.y / (*ray)->perp_dist);
 	//calculate lowest and highest pixel to fill in current stripe
-	(*ray)->draw_start = -line_h / 2 + cub->mlx.win_size.y / 2;
+	(*ray)->draw_start = -(*ray)->line_h / 2 + cub->mlx.win_size.y / 2;
 	if ((*ray)->draw_start < 0)
 		(*ray)->draw_start = 0;
-	(*ray)->draw_end = line_h / 2 + cub->mlx.win_size.y / 2;
+	(*ray)->draw_end = (*ray)->line_h / 2 + cub->mlx.win_size.y / 2;
 	if ((*ray)->draw_end >= cub->mlx.win_size.y)
 		(*ray)->draw_end = cub->mlx.win_size.y - 1;
 	draw_stripe(ray, cub, x);

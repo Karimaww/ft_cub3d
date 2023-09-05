@@ -1,23 +1,32 @@
 #include "cub3d.h"
 
+static void	close_mlx(t_cub *cub, t_mlx mlx)
+{
+	if (mlx.img)
+		mlx_destroy_image(cub->mlx.mlx, mlx.img);
+	if (mlx.win)
+		mlx_destroy_window(cub->mlx.mlx, mlx.win);
+	if (mlx.mlx)
+	{
+		mlx_destroy_display(cub->mlx.mlx);
+		free(mlx.mlx);
+	}
+}
+
 void	ft_close(t_cub *cub)
 {
 	if (cub->map)
-	{
-		free_tab(cub->map->map);
-		free(cub->map);
-	}
-	if (cub->mlx.img)
-		mlx_destroy_image(cub->mlx.mlx, cub->mlx.img);
-	if (cub->mlx.win)
-		mlx_destroy_window(cub->mlx.mlx, cub->mlx.win);
-	if (cub->mlx.mlx)
-	{
-		mlx_destroy_display(cub->mlx.mlx);
-		free(cub->mlx.mlx);
-	}
+		free_map(cub->map);
+	close_mlx(cub, cub->north);
+	close_mlx(cub, cub->south);
+	close_mlx(cub, cub->east);
+	close_mlx(cub, cub->west);
+	close_mlx(cub, cub->mlx);
 	if (cub->ray)
+	{
 		free(cub->ray);
+		cub->ray = NULL;
+	}
 	if (cub)
 		free(cub);
 	exit(0);

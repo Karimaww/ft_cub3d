@@ -1,34 +1,39 @@
 #include "cub3d.h"
 
-// faut check si xpm_to_image/get_data_addr est NULL??
-t_txt	*init_textures(t_cub *cub)
+void	text_addr(t_cub **cub)
 {
-	t_txt	*text;
+	(*cub)->north.addr = mlx_get_data_addr((*cub)->north.img,
+			&((*cub)->north.bpp),
+			&((*cub)->north.linel), &((*cub)->north.endian));
+	(*cub)->south.addr = mlx_get_data_addr((*cub)->south.img,
+			&((*cub)->south.bpp),
+			&((*cub)->south.linel), &((*cub)->south.endian));
+	(*cub)->west.addr = mlx_get_data_addr((*cub)->west.img, &((*cub)->west.bpp),
+			&((*cub)->west.linel), &((*cub)->west.endian));
+	(*cub)->east.addr = mlx_get_data_addr((*cub)->east.img, &((*cub)->east.bpp),
+			&((*cub)->east.linel), &((*cub)->east.endian));
+}
 
-	text = malloc(sizeof(t_txt));
-	if (!text)
-		return (NULL);
-	printf("MAP NORTH : [%s]\n", cub->map->no);
-	text->north.img = mlx_xpm_file_to_image(&(cub->mlx), cub->map->no,
-			&text->north.win_size.x, &text->north.win_size.y);
-	if (!text->north.img)
-		return (free(text), NULL);
-	text->north.addr = mlx_get_data_addr(text->north.img, &(text->north.bpp),
-			&(text->north.linel), &(text->north.endian));
-
-	text->south.img = mlx_xpm_file_to_image(&(cub->mlx), cub->map->so,
-			&text->south.win_size.x, &text->south.win_size.y);
-	text->south.addr = mlx_get_data_addr(text->south.img, &(text->south.bpp),
-			&(text->south.linel), &(text->south.endian));
-
-	text->west.img = mlx_xpm_file_to_image(&(cub->mlx), cub->map->we,
-			&text->west.win_size.x, &text->west.win_size.y);
-	text->west.addr = mlx_get_data_addr(text->west.img, &(text->west.bpp),
-			&(text->west.linel), &(text->west.endian));
-
-	text->east.img = mlx_xpm_file_to_image(&(cub->mlx), cub->map->ea,
-			&text->east.win_size.x, &text->east.win_size.y);
-	text->east.addr = mlx_get_data_addr(text->east.img, &(text->east.bpp),
-			&(text->east.linel), &(text->east.endian));
-	return (text);
+int	init_textures(t_cub **cub)
+{
+	(*cub)->north.mlx = NULL;
+	(*cub)->south.mlx = NULL;
+	(*cub)->west.mlx = NULL;
+	(*cub)->east.mlx = NULL;
+	(*cub)->north.win = NULL;
+	(*cub)->south.win = NULL;
+	(*cub)->west.win = NULL;
+	(*cub)->east.win = NULL;
+	(*cub)->north.img = mlx_xpm_file_to_image((*cub)->mlx.mlx, (*cub)->map->no,
+			&(*cub)->north.win_size.x, &(*cub)->north.win_size.y);
+	(*cub)->south.img = mlx_xpm_file_to_image((*cub)->mlx.mlx, (*cub)->map->so,
+			&(*cub)->south.win_size.x, &(*cub)->south.win_size.y);
+	(*cub)->west.img = mlx_xpm_file_to_image((*cub)->mlx.mlx, (*cub)->map->we,
+			&(*cub)->west.win_size.x, &(*cub)->west.win_size.y);
+	(*cub)->east.img = mlx_xpm_file_to_image((*cub)->mlx.mlx, (*cub)->map->ea,
+			&(*cub)->east.win_size.x, &(*cub)->east.win_size.y);
+	if (!(*cub)->north.img || !(*cub)->south.img
+		|| !(*cub)->west.img || !(*cub)->east.img)
+		return (EXIT_FAILURE);
+	return (text_addr(cub), EXIT_SUCCESS);
 }

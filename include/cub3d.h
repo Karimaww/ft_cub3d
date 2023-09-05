@@ -24,6 +24,7 @@
 
 # define SPEED 0.1
 # define ANGLE 0.05
+# define PI 3.14159
 
 #ifdef __linux__
 # define ESC 65307
@@ -130,25 +131,23 @@ typedef struct s_ray
 	double	pos_z;
 	double	row_dist;
 	double	camera_x;
+	double	perp_dist;
+	int		line_h;
 	int		draw_start;
 	int		draw_end;
 	int		hit;
 	int		side;
 }			t_ray;
 
-typedef struct s_txt
-{
-	t_mlx	north;
-	t_mlx	south;
-	t_mlx	west;
-	t_mlx	east;
-}			t_txt;
 
 typedef struct s_cub
 {
 	t_map	*map;
-	t_txt	*texture;
 	t_mlx	mlx;
+	t_mlx	north;
+	t_mlx	south;
+	t_mlx	west;
+	t_mlx	east;
 	t_ray	*ray;
 }			t_cub;
 
@@ -189,7 +188,7 @@ void	draw_line(t_cub *cub, t_vec2 p1, t_vec2 p2);
 int		draw_cub(t_cub *cub, t_ray *ray);
 int		init_ray(t_ray **ray, t_cub *cub);
 t_cub	*init_cub(t_map *map);
-t_txt	*init_textures(t_cub *cub);
+int		init_textures(t_cub **cub);
 
 /*-----wall------*/
 void	init_raydir(t_ray **ray, t_cub *cub, int x);
@@ -202,6 +201,7 @@ void	draw_back(t_cub *cub, t_ray **ray);
 void	draw_stripe(t_ray **ray, t_cub *cub, int x);
 
 /*----hooks----*/
+void	init_rot(t_cub *cub);
 int		check_move(double val, double start, double end);
 void	forward(t_cub *cub);
 void	back(t_cub *cub);

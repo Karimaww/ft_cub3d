@@ -45,24 +45,27 @@ int	free_tab(char **tab)
 			free(tab[i]);
 			i++;
 		}
+		free(tab);
 	}
-	free(tab);
 	return (EXIT_SUCCESS);
 }
 
 int	free_map(t_map *map)
 {
-	if (map->no)
-		free(map->no);
-	if (map->so)
-		free(map->so);
-	if (map->we)
-		free(map->we);
-	if (map->ea)
-		free(map->ea);
-	if (map->map)
-		free_tab(map->map);
-	free(map);
+	if (map)
+	{
+		if (map->no)
+			free(map->no);
+		if (map->so)
+			free(map->so);
+		if (map->we)
+			free(map->we);
+		if (map->ea)
+			free(map->ea);
+		if (map->map)
+			free_tab(map->map);
+		free(map);
+	}
 	return (EXIT_SUCCESS);
 }
 
