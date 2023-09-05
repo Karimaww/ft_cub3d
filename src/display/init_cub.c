@@ -57,6 +57,7 @@ t_cub	*init_cub(t_map *map)
 	cub->ray = ray;
 	if (init_mlx(&cub) == EXIT_FAILURE)
 		return (ft_close(cub), NULL);
+	mlx_do_key_autorepeatoff(cub->mlx.mlx);
 	if (init_textures(&cub) == EXIT_FAILURE)
 		return (ft_close(cub), NULL);
 	if (init_ray(&ray, cub) == EXIT_FAILURE)

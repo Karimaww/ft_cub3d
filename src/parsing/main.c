@@ -12,18 +12,6 @@ void	print_map_tab(char **tab, t_vec2 size)
 	}
 }
 
-void	print_lst(t_lst *lst)
-{
-	t_lst	*tmp;
-
-	tmp = lst;
-	while (tmp)
-	{
-		printf("%s\n", tmp->tab);
-		tmp = tmp->next;
-	}
-}
-
 int	main(int ac, char **av, char **env)
 {
 	t_map	*map;
@@ -36,7 +24,7 @@ int	main(int ac, char **av, char **env)
 	//maybe check if av[1] is a .cub extension ?
 	map = parse(av[1]);
 	if (!map)
-		return (EXIT_FAILURE);
+		return (get_next_line(-42), EXIT_FAILURE);
 	print_map_tab(map->map, map->map_size);
 	printf("no = %s \nso = %s \nwe = %s \nea = %s \n",
 		map->no, map->so, map->we, map->ea);
@@ -48,5 +36,6 @@ int	main(int ac, char **av, char **env)
 		return (printf("Error: init cub.\n"), free_map(map), EXIT_FAILURE);
 	mlx_loop(cub->mlx.mlx);
 	//free_map(map);
+	
 	return (0);
 }

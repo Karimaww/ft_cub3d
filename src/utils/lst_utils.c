@@ -32,10 +32,9 @@ int	free_lst(t_lst **lst)
 	t_lst	*tmp;
 
 	if (!*lst)
-		return (printf("REEER\n"), EXIT_SUCCESS);
+		return (EXIT_SUCCESS);
 	while (*lst)
 	{
-		printf("lst tab : %s\n", (*lst)->tab);
 		tmp = (*lst)->next;
 		if ((*lst)->tab)
 			free((*lst)->tab);

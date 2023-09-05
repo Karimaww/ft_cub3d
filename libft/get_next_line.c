@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ejankovs <ejankovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 17:29:50 by ksadykov          #+#    #+#             */
-/*   Updated: 2023/04/10 17:29:50 by ksadykov         ###   ########.fr       */
+/*   Updated: 2023/09/055 20:08:348:34 by ejankovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0)
-		return (NULL);
+		return (free_buf(s), NULL);
 	buf = ft_alloc();
 	size = read(fd, buf, BUFFER_SIZE);
 	while (size > 0)

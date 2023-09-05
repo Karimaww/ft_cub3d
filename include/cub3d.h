@@ -25,6 +25,7 @@
 # define SPEED 0.1
 # define ANGLE 0.05
 # define PI 3.14159
+# define OFFSET 0.25
 
 #ifdef __linux__
 # define ESC 65307

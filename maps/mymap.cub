@@ -1,11 +1,11 @@
+
 NO             textures-mineraux/rouge-fonce.xpm  
-F 122,90,200
+F 122,90,255
 C 99,98,0
+
 SO                       textures-mineraux/rose.xpm     
                   WE          textures-mineraux/pierre.xpm 
 EA            textures-mineraux/vert-fonce.xpm
-1111111111111111111111111
-1000000001100000000000001
-10110000011100000W0000001
-1001000000000000000000001
-1111111111111111111111111
+111
+1N1
+111

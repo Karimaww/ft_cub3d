@@ -52,48 +52,27 @@ int	is_line_for_map(char *line)
 
 int	get_map(t_map **map, char *line, int fd)
 {
-	t_map	*tmp;
 	t_lst	*lst;
 
 	if (!line)
 		return (printf("Error: No map.\n"), EXIT_FAILURE);
-	tmp = *map;
 	lst = NULL;
 	while (line)
 	{
 		if (is_line_for_map(line) == EXIT_FAILURE
 			|| lst_add_back(&lst, line) == EXIT_FAILURE)
-			{
-				printf("line problematique : %s\n", line);
-				if (line)
-				{
-					printf("line free: %s\n", line);
-					free(line);
-					line = NULL;
-				}
-				free_lst(&lst);
-				if (lst)
-				{
-					free(lst);
-					lst = NULL;
-				}
-				return (EXIT_FAILURE);
-			}
-		printf("line : %s\n", line);
+			return (free(line), free_lst(&lst), EXIT_FAILURE);
 		free(line);
 		line = get_next_line(fd);
 	}
 	if (line)
-	{
-		printf("here\n");
 		free(line);
-	}
 	if (!lst)
 		return (printf("Error: No map.\n"), free(line), EXIT_FAILURE);
 	if (lst_size(lst) <= 1)
 		return (printf("Error: Invalid map.\n"), EXIT_FAILURE);
-	tmp->map = create_map(lst, &(tmp->map_size));
-	if (!tmp->map)
+	(*map)->map = create_map(lst, &((*map)->map_size));
+	if (!(*map)->map)
 		return (free(line), free_lst(&lst), EXIT_FAILURE);
 	return (free_lst(&lst), EXIT_SUCCESS);
 }
@@ -122,18 +101,18 @@ t_map	*parse(char *path)
 	t_map	*map;
 
 	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (NULL);
 	map = init_map();
 	if (!map)
-		return (NULL);
+		return (close(fd), NULL);
 	line = get_next_line(fd);
 	if (!line)
-		return (free_map(map), NULL);
-	if (fd < 0)
-		return (free_map(map), free(line), NULL);
+		return (close(fd), free_map(map), NULL);
 	while (line && empty_params(map))
 	{
 		if (get_param(&map, line) == EXIT_FAILURE)
-			return (free_map(map), free(line), NULL);
+			return (free_map(map), free(line), close(fd), NULL);
 		free(line);
 		line = get_next_line(fd);
 	}
@@ -141,17 +120,12 @@ t_map	*parse(char *path)
 	{
 		if (line)
 			free(line);
-		return (printf("Error: Missing params.\n"),
-			free_map(map), NULL);
+		return (printf("Error: Missing params.\n"), free_map(map),
+			close(fd), NULL);
 	}
 	if (get_map(&map, ignore_empty_lines(line, fd), fd) == EXIT_FAILURE)
-	{
-		// if (line)
-		// 	free(line);
-		return (free_map(map), NULL);
-	}
+		return (close(fd), free_map(map), NULL);
 	if (check_player(map) == EXIT_FAILURE)
-		return (free_map(map), NULL);
-	//close(fd);
-	return (map);
+		return (free_map(map), close(fd), NULL);
+	return (close(fd), map);
 }

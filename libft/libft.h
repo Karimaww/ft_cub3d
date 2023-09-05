@@ -6,7 +6,7 @@
 /*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 18:45:24 by ksadykov          #+#    #+#             */
-/*   Updated: 2023/04/10 17:29:59 by ksadykov         ###   ########.fr       */
+/*   Updated: 2023/09/05 20:19:19 by ksadykov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,5 @@ void	ft_strdel(char **as);
 char	*ft_strncpy(char *dest, const char *src, size_t n);
 char	*ft_alloc(void);
 char	*get_next_line(int fd);
+void	free_buf(char *s[]);
 #endif

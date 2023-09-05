@@ -80,7 +80,6 @@ void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x)
 		tex_x = side.win_size.x - tex_x - 1;
 	if ((*ray)->side == 1 && (*ray)->ray_dir.y < 0)
 		tex_x = side.win_size.x - tex_x - 1;
-	printf("tex_x : %d\n", tex_x);
 	// How much to increase the texture coordinate per screen pixel
 	step = 1.0 * side.win_size.y / (*ray)->line_h;
 	// Starting texture coordinate
@@ -98,11 +97,11 @@ void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x)
 void	draw_stripe(t_ray **ray, t_cub *cub, int x)
 {
 	if ((*ray)->side == 1 && (*ray)->ray_dir.y > 0)
-		draw_side(cub->south, ray, cub, x);
-	else if ((*ray)->side == 1 && (*ray)->ray_dir.y <= 0)
 		draw_side(cub->north, ray, cub, x);
+	else if ((*ray)->side == 1 && (*ray)->ray_dir.y <= 0)
+		draw_side(cub->south, ray, cub, x);
 	else if ((*ray)->side == 0 && (*ray)->ray_dir.x > 0)
-		draw_side(cub->west, ray, cub, x);
-	else
 		draw_side(cub->east, ray, cub, x);
+	else
+		draw_side(cub->west, ray, cub, x);
 }
