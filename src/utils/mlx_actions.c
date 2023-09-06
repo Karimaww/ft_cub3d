@@ -21,7 +21,10 @@ void	ft_close(t_cub *cub)
 	close_mlx(cub, cub->south);
 	close_mlx(cub, cub->east);
 	close_mlx(cub, cub->west);
+	mlx_do_key_autorepeaton(cub->mlx.mlx);
 	close_mlx(cub, cub->mlx);
+	if (cub->press)
+		free(cub->press);
 	if (cub->ray)
 	{
 		free(cub->ray);
@@ -29,7 +32,7 @@ void	ft_close(t_cub *cub)
 	}
 	if (cub)
 		free(cub);
-	mlx_do_key_autorepeaton(cub->mlx.mlx);
+	//mlx_do_key_autorepeaton(cub->mlx.mlx);
 	exit(0);
 }
 
@@ -56,18 +59,37 @@ int	ft_key_choose(int key, t_cub *cub)
 	printf("key : %d\n", key);
 	if (key == ESC)
 		ft_close(cub);
-	if (key == W)
-		forward(cub);
-	if (key == A)
-		left(cub);
-	if (key == S)
+	if (key == W || cub->press->w == 1)
+	{
+		printf("cub->press : %d\n", cub->press->w);
+		cub->press->w = 1;
+		//forward(cub);
+	}
+	if (key == A || cub->press->a == 1)
+	{
+		cub->press->a = 1;
+		//left(cub);
+	}
+	if (key == S || cub->press->s == 1)
+	{
+		cub->press->s = 1;
 		back(cub);
-	if (key == D)
+	}
+	if (key == D || cub->press->d == 1)
+	{
+		cub->press->d = 1;
 		right(cub);
-	if (key == RL)
+	}
+	if (key == RL || cub->press->rl == 1)
+	{
+		cub->press->rl = 1;
 		rot_left(cub);
-	if (key == RR)
+	}
+	if (key == RR || cub->press->rr == 1)
+	{
+		cub->press->rr = 1;
 		rot_right(cub);
+	}
 	clear_screen(cub);
 	draw_cub(cub, cub->ray);
 	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);

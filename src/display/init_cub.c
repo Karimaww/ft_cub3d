@@ -42,6 +42,78 @@ int	init_ray(t_ray **ray, t_cub *cub)
 	return (EXIT_SUCCESS);
 }
 
+void	init_press(t_cub **cub)
+{
+	(*cub)->press = malloc(sizeof(t_press));
+	if (!(*cub)->press)
+		return ;
+	(*cub)->press->w = 0;
+	(*cub)->press->a = 0;
+	(*cub)->press->s = 0;
+	(*cub)->press->d = 0;
+	(*cub)->press->rl = 0;
+	(*cub)->press->rr = 0;
+}
+
+int		change_flag_0(int key, t_cub *cub)
+{
+	if (key == W)
+		cub->press->w = 0;
+	if (key == A)
+		cub->press->a = 0;
+	if (key == S)
+		cub->press->s = 0;
+	if (key == D)
+		cub->press->d = 0;
+	if (key == RL)
+		cub->press->rl = 0;
+	if (key == RR)
+		cub->press->rr = 0;
+	return (0);
+}
+
+int		update_game(t_cub *cub)
+{
+	clear_screen(cub);
+	if (cub->press->w)
+		forward(cub);
+	if (cub->press->a)
+		left(cub);
+	if (cub->press->s)
+		back(cub);
+	if (cub->press->d)
+		right(cub);
+	if (cub->press->rl)
+		rot_left(cub);
+	if (cub->press->rr)
+		rot_right(cub);
+	if (draw_cub(cub, cub->ray) == EXIT_FAILURE)
+		return (ft_close(cub), 1);
+	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
+	return (0);
+}
+
+int		handle_mouse(int x, int y, t_cub *cub)
+{
+	int	new_x;
+
+	(void)y;
+	new_x = x - (cub->mlx.win_size.x / 2);
+	if (new_x < 0)
+	{
+		// cub->press->rl = 1;
+		// cub->press->rr = 0;
+		rot_left(cub);
+	}
+	else
+	{
+		// cub->press->rl = 0;
+		// cub->press->rr = 1;
+		rot_right(cub);
+	}
+	return (0);
+}
+
 t_cub	*init_cub(t_map *map)
 {
 	t_cub	*cub;
@@ -53,6 +125,7 @@ t_cub	*init_cub(t_map *map)
 	cub->map = map;
 	cub->mlx.win_size.x = 1200;
 	cub->mlx.win_size.y = 800;
+	init_press(&cub);
 	ray = NULL;
 	cub->ray = ray;
 	if (init_mlx(&cub) == EXIT_FAILURE)
@@ -62,10 +135,16 @@ t_cub	*init_cub(t_map *map)
 		return (ft_close(cub), NULL);
 	if (init_ray(&ray, cub) == EXIT_FAILURE)
 		return (ft_close(cub), NULL);
-	if (draw_cub(cub, ray) == EXIT_FAILURE)
-		return (ft_close(cub), NULL);
-	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
+	// if (draw_cub(cub, ray) == EXIT_FAILURE)
+	// 	return (ft_close(cub), NULL);
+	//mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
 	mlx_hook(cub->mlx.win, ON_DESTROY, MKEYPRESS, mouse_hook, cub);
-	mlx_hook(cub->mlx.win, ON_KEYDOWN, MKEYPRESS, ft_key_choose, cub);
+	mlx_hook(cub->mlx.win, KeyPress, KeyPressMask, ft_key_choose, cub);
+	mlx_hook(cub->mlx.win, KeyRelease, KeyReleaseMask, change_flag_0, cub);
+	mlx_hook(cub->mlx.win, MotionNotify, PointerMotionMask, handle_mouse, cub);
+	mlx_loop_hook(cub->mlx.mlx, &update_game, cub);
+	// mlx_hook(cub->mlx.win, ON_DESTROY, MKEYPRESS, mouse_hook, cub);
+	// mlx_hook(cub->mlx.win, KeyPress, KeyPressMask, ft_key_choose, cub);
+	// mlx_hook(cub->mlx.win, KeyRelease, KeyReleaseMask, change_flag_0, cub);
 	return (cub);
 }

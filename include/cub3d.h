@@ -9,6 +9,7 @@
 # include "../mlx/mlx.h"
 # include <stdbool.h>
 # include <stdio.h>
+# include "mlx_int.h"
 
 # define RGB_RED 0xFFA07A
 # define RGB_BLACK 0x000000
@@ -22,8 +23,8 @@
 # define BUTTONRELEASE 5
 # define MKEYPRESS 1L
 
-# define SPEED 0.1
-# define ANGLE 0.05
+# define SPEED 0.08
+# define ANGLE 0.02
 # define PI 3.14159
 # define OFFSET 0.25
 
@@ -140,9 +141,19 @@ typedef struct s_ray
 	int		side;
 }			t_ray;
 
+typedef struct s_press
+{
+	int		w;
+	int		a;
+	int		s;
+	int		d;
+	int		rl;
+	int		rr;	
+}			t_press;
 
 typedef struct s_cub
 {
+	t_press *press;
 	t_map	*map;
 	t_mlx	mlx;
 	t_mlx	north;
