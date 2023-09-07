@@ -27,6 +27,7 @@
 # define ANGLE 0.02
 # define PI 3.14159
 # define OFFSET 0.25
+# define VMOVE 0.0
 
 #ifdef __linux__
 # define ESC 65307
@@ -151,16 +152,31 @@ typedef struct s_press
 	int		rr;	
 }			t_press;
 
+typedef struct s_sprite
+{
+	t_mlx		text;
+	t_vec2		draw_start;
+	t_vec2		draw_end;
+	t_vec2d		pos;
+	t_vec2d		transform;
+	double		inv_det;
+	double		*z_buf;
+	int			screen_x;
+	int			h;
+	int			w;
+}				t_sprite;
+
 typedef struct s_cub
 {
-	t_press *press;
-	t_map	*map;
-	t_mlx	mlx;
-	t_mlx	north;
-	t_mlx	south;
-	t_mlx	west;
-	t_mlx	east;
-	t_ray	*ray;
+	t_press		*press;
+	t_map		*map;
+	t_mlx		mlx;
+	t_mlx		north;
+	t_mlx		south;
+	t_mlx		west;
+	t_mlx		east;
+	t_sprite	*sprite;
+	t_ray		*ray;
 }			t_cub;
 
 /*----parsing----*/
@@ -201,6 +217,11 @@ int		draw_cub(t_cub *cub, t_ray *ray);
 int		init_ray(t_ray **ray, t_cub *cub);
 t_cub	*init_cub(t_map *map);
 int		init_textures(t_cub **cub);
+
+int		init_sprite(t_cub **cub);
+void	draw_sprite(t_cub **cub, t_ray *ray);
+void	texture_on_img(t_mlx *texture, t_cub **cub,
+			int x, int y, int tex_x, int tex_y);
 
 /*-----wall------*/
 void	init_raydir(t_ray **ray, t_cub *cub, int x);

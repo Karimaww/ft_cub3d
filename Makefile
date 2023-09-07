@@ -10,10 +10,12 @@ NC		= \033[0m
 
 SOURCES_DISPLAY		=	draw_back.c		\
 						draw_cub.c		\
+						draw_sprite.c	\
 						draw_stripe.c	\
 						draw_wall.c		\
 						init_cub.c		\
 						init_rot.c		\
+						init_sprite.c 	\
 						init_textures.c	\
 						move.c			\
 						rotate.c		\
@@ -63,7 +65,7 @@ endif
 $(NAME): $(OBJS)
 	@echo "$(YELLOW)Linking objects...$(NC)"
 	$(CC) $(OBJS) $(LDFLAGS)
-	@echo "$(PURPLE)Compilation successful!$(NC)"
+	@echo "$(PURPLE)Compilation successful! ☆(❁‿❁)☆$(NC)"
 
 obj:
 	@echo "$(YELLOW)Creating object directories...$(NC)"
@@ -87,7 +89,7 @@ clean:
 	@$(RM) -rf $(OBJ_DIR)
 
 fclean: clean
-	@echo "$(RED)Full cleaning...$(NC)"
+	@echo "$(RED)Full cleaning... (◉◞౪◟◉)$(NC)"
 	@$(RM) -f $(NAME)
 	@make fclean -C $(LIBFT)
 

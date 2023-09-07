@@ -15,7 +15,10 @@ int	draw_cub(t_cub *cub, t_ray *ray)
 		init_side_dist(&ray);
 		dda_algo(&ray, cub);
 		show_line(&ray, cub, x);
+		cub->sprite->z_buf[x] = ray->perp_dist;
 		x++;
 	}
+	// Sprite casting
+	draw_sprite(&cub, ray);
 	return (EXIT_SUCCESS);
 }

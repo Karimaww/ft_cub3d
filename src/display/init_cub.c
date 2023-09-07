@@ -135,6 +135,8 @@ t_cub	*init_cub(t_map *map)
 		return (ft_close(cub), NULL);
 	if (init_ray(&ray, cub) == EXIT_FAILURE)
 		return (ft_close(cub), NULL);
+	if (init_sprite(&cub) == EXIT_FAILURE)
+		return (ft_close(cub), NULL);
 	// if (draw_cub(cub, ray) == EXIT_FAILURE)
 	// 	return (ft_close(cub), NULL);
 	//mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);

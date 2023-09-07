@@ -30,6 +30,12 @@ void	ft_close(t_cub *cub)
 		free(cub->ray);
 		cub->ray = NULL;
 	}
+	if (cub->sprite)
+	{
+		if (cub->sprite->z_buf)
+			free(cub->sprite->z_buf);
+		free(cub->sprite);
+	}
 	if (cub)
 		free(cub);
 	//mlx_do_key_autorepeaton(cub->mlx.mlx);
