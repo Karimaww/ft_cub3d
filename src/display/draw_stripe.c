@@ -3,18 +3,31 @@
 void	texture_on_img(t_mlx *texture, t_cub **cub,
 	int x, int y, int tex_x, int tex_y)
 {
+	int	r;
+	int	g;
+	int	b;
+	// printf("x : %d\n", x);
+	// printf("y : %d\n", y);
+	// printf("tex_x : %d\n", tex_x);
+	// printf("tex_y : %d\n", tex_y);
+	// printf("values : x : %d y : %d tex_x : %d tex_y : %d\n", x, y, tex_x, tex_y);
+	if (!((tex_y >= 0 && tex_y < texture->win_size.y
+		&& tex_x >= 0 && tex_x < texture->win_size.x)))
+		return ;
+	r = texture->addr[(int)(tex_y * texture->linel + (double)tex_x * ((double)texture->bpp / 8))]; 
+	g = texture->addr[(int)(tex_y * texture->linel + (double)tex_x * ((double)texture->bpp / 8) + 1)];
+	b = texture->addr[(int)(tex_y * texture->linel + (double)tex_x * ((double)texture->bpp / 8) + 2)];
+	if (r == 0 && g == 0 && b == 0)
+		return ;
 	(*cub)->mlx.addr[y * (*cub)->mlx.linel
 		+ x * (*cub)->mlx.bpp / 8]
-		= texture->addr[(int)(tex_y * texture->linel
-			+ (double)tex_x * ((double)texture->bpp / 8))];
+		= r;
 	(*cub)->mlx.addr[y * (*cub)->mlx.linel
 		+ x * ((*cub)->mlx.bpp / 8) + 1]
-		= texture->addr[(int)(tex_y * texture->linel
-			+ (double)tex_x * ((double)texture->bpp / 8) + 1)];
+		= g;
 	(*cub)->mlx.addr[y * (*cub)->mlx.linel
 		+ x * ((*cub)->mlx.bpp / 8) + 2]
-		= texture->addr[(int)(tex_y * texture->linel
-			+ (double)tex_x * ((double)texture->bpp / 8) + 2)];
+		= b;
 }
 
 void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x)

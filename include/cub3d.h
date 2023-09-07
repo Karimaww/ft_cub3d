@@ -10,6 +10,9 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include "mlx_int.h"
+# include <dirent.h>
+# include <string.h>
+#include <sys/time.h>
 
 # define RGB_RED 0xFFA07A
 # define RGB_BLACK 0x000000
@@ -24,10 +27,12 @@
 # define MKEYPRESS 1L
 
 # define SPEED 0.08
-# define ANGLE 0.02
+# define ANGLE 0.05
 # define PI 3.14159
 # define OFFSET 0.25
 # define VMOVE 0.0
+# define UDIV 2
+# define VDIV 2
 
 #ifdef __linux__
 # define ESC 65307
@@ -111,6 +116,7 @@ typedef struct s_mlx
 	void	*win;
 	void	*img;
 	char	*addr;
+	int		i;
 	int		bpp;
 	int		linel;
 	int		endian;
@@ -154,16 +160,18 @@ typedef struct s_press
 
 typedef struct s_sprite
 {
-	t_mlx		text;
+	t_mlx		*text;
 	t_vec2		draw_start;
 	t_vec2		draw_end;
 	t_vec2d		pos;
 	t_vec2d		transform;
 	double		inv_det;
 	double		*z_buf;
+	int			v_move;
 	int			screen_x;
 	int			h;
 	int			w;
+	int			text_count;
 }				t_sprite;
 
 typedef struct s_cub
@@ -177,6 +185,7 @@ typedef struct s_cub
 	t_mlx		east;
 	t_sprite	*sprite;
 	t_ray		*ray;
+	int			sprite_text_id;
 }			t_cub;
 
 /*----parsing----*/

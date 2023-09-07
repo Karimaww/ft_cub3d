@@ -38,7 +38,6 @@ void	ft_close(t_cub *cub)
 	}
 	if (cub)
 		free(cub);
-	//mlx_do_key_autorepeaton(cub->mlx.mlx);
 	exit(0);
 }
 

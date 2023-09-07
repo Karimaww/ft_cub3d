@@ -33,7 +33,7 @@ SOURCES_UTILS 		=	lst_utils.c		\
 LIBFT		= libft
 MLX			= mlx
 
-CFLAGS		= -Wall -Wextra -Werror -g3
+CFLAGS		= -Wall -Wextra -Werror -g3 
 
 INCLUDE		= include
 SRC_DIR		= src
@@ -64,7 +64,7 @@ endif
 
 $(NAME): $(OBJS)
 	@echo "$(YELLOW)Linking objects...$(NC)"
-	$(CC) $(OBJS) $(LDFLAGS)
+	$(CC) -fsanitize=address $(OBJS) $(LDFLAGS)
 	@echo "$(PURPLE)Compilation successful! ☆(❁‿❁)☆$(NC)"
 
 obj:

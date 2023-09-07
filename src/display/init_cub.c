@@ -72,6 +72,21 @@ int		change_flag_0(int key, t_cub *cub)
 	return (0);
 }
 
+void	delay(int microseconds)
+{
+    struct timeval start_time, current_time;
+    gettimeofday(&start_time, NULL);
+
+    while (1) {
+        gettimeofday(&current_time, NULL);
+        int elapsed_time = (current_time.tv_sec - start_time.tv_sec) * 1000000 + (current_time.tv_usec - start_time.tv_usec);
+        
+        if (elapsed_time >= microseconds) {
+            break;
+        }
+    }
+}
+
 int		update_game(t_cub *cub)
 {
 	clear_screen(cub);
@@ -87,9 +102,14 @@ int		update_game(t_cub *cub)
 		rot_left(cub);
 	if (cub->press->rr)
 		rot_right(cub);
-	if (draw_cub(cub, cub->ray) == EXIT_FAILURE)
-		return (ft_close(cub), 1);
-	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
+	for (int i = 0; i < cub->sprite->text_count; i++)
+	{
+		cub->sprite_text_id = i;
+		if (draw_cub(cub, cub->ray) == EXIT_FAILURE)
+			return (ft_close(cub), 1);
+		mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
+		//delay(10);
+	}
 	return (0);
 }
 
