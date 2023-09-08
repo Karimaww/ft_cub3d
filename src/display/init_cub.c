@@ -89,6 +89,22 @@ void	delay(int microseconds)
 
 int		update_game(t_cub *cub)
 {
+	int	i;
+
+	i = 0;
+    cub->frame_counter++;
+    if (cub->frame_counter >= 5)
+	{
+		cub->frame_counter = 0;
+		while (i < SPRITE_COUNT)
+		{
+			cub->sprite[i].current_frame++;
+			if (cub->sprite[i].current_frame >= cub->sprite[i].text_count)
+				cub->sprite[i].current_frame = 0;
+			cub->sprite[i].text_id = cub->sprite[i].current_frame;
+			i++;
+		}
+	}
 	clear_screen(cub);
 	if (cub->press->w)
 		forward(cub);
@@ -102,14 +118,9 @@ int		update_game(t_cub *cub)
 		rot_left(cub);
 	if (cub->press->rr)
 		rot_right(cub);
-	for (int i = 0; i < cub->sprite->text_count; i++)
-	{
-		cub->sprite_text_id = i;
-		if (draw_cub(cub, cub->ray) == EXIT_FAILURE)
-			return (ft_close(cub), 1);
-		mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
-		//delay(10);
-	}
+	if (draw_cub(cub, cub->ray) == EXIT_FAILURE)
+		return (ft_close(cub), 1);
+	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
 	return (0);
 }
 
@@ -145,9 +156,15 @@ t_cub	*init_cub(t_map *map)
 	cub->map = map;
 	cub->mlx.win_size.x = 1200;
 	cub->mlx.win_size.y = 800;
+	cub->z_buf = malloc(sizeof(double) * cub->mlx.win_size.x);
+	if (!cub->z_buf)
+		return (ft_close(cub), NULL);
+	ft_bzero(cub->z_buf, cub->mlx.win_size.x);
 	init_press(&cub);
 	ray = NULL;
+	cub->sprite = NULL;
 	cub->ray = ray;
+	cub->frame_counter = 0;
 	if (init_mlx(&cub) == EXIT_FAILURE)
 		return (ft_close(cub), NULL);
 	mlx_do_key_autorepeatoff(cub->mlx.mlx);

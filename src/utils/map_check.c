@@ -83,6 +83,25 @@ int	check_border(char **tab, int i, int j, int size)
 	return (1);
 }
 
+int	check_border(char **tab, int i, int j, int size)
+{
+	if (i == 0 || j == 0 || i == size - 1 || j == (int)ft_strlen(tab[i]) - 1)
+		return (0);
+	if (tab[i - 1][j] == '1' && tab[i + 1][j] == '1')
+		return (1);
+	if (tab[i][j - 1] == '1' && tab[i][j + 1] == '1')
+		return (1);
+	if (tab[i - 1][j] == '1' && tab[i + 1][j] != '1')
+		return (0);
+	if (tab[i][j - 1] == '1' && tab[i][j + 1] != '1')
+		return (0);
+	if (tab[i - 1][j] != '1' && tab[i + 1][j] == '1')
+		return (0);
+	if (tab[i][j - 1] != '1' && tab[i][j + 1] == '1')
+		return (0);
+	return (1);
+}
+
 int	check_isolation(char **tab, int size)
 {
 	int	j;
@@ -96,6 +115,8 @@ int	check_isolation(char **tab, int size)
 		while (tab[i][j])
 		{
 			if (tab[i][j] == '0' && !check_border(tab, i, j, size))
+				return (EXIT_FAILURE);
+			if (tab[i][j] == '2' && !check_wall(tab, i, j, size))
 				return (EXIT_FAILURE);
 			j++;
 		}

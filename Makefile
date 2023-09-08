@@ -64,7 +64,8 @@ endif
 
 $(NAME): $(OBJS)
 	@echo "$(YELLOW)Linking objects...$(NC)"
-	$(CC) -fsanitize=address $(OBJS) $(LDFLAGS)
+	$(CC) $(OBJS) $(LDFLAGS)
+#$(CC) -fsanitize=address $(OBJS) $(LDFLAGS)
 	@echo "$(PURPLE)Compilation successful! ☆(❁‿❁)☆$(NC)"
 
 obj:

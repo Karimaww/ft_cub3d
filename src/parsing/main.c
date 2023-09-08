@@ -36,6 +36,5 @@ int	main(int ac, char **av, char **env)
 		return (printf("Error: init cub.\n"), free_map(map), EXIT_FAILURE);
 	mlx_loop(cub->mlx.mlx);
 	//free_map(map);
-	
 	return (0);
 }

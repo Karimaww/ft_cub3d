@@ -15,14 +15,18 @@ static void	close_mlx(t_cub *cub, t_mlx mlx)
 
 void	ft_close(t_cub *cub)
 {
+	int	i;
+	int	j;
+
+	j = 0;
+	i = 0;
 	if (cub->map)
 		free_map(cub->map);
 	close_mlx(cub, cub->north);
 	close_mlx(cub, cub->south);
 	close_mlx(cub, cub->east);
 	close_mlx(cub, cub->west);
-	mlx_do_key_autorepeaton(cub->mlx.mlx);
-	close_mlx(cub, cub->mlx);
+	close_mlx(cub, cub->door);
 	if (cub->press)
 		free(cub->press);
 	if (cub->ray)
@@ -30,12 +34,27 @@ void	ft_close(t_cub *cub)
 		free(cub->ray);
 		cub->ray = NULL;
 	}
+
 	if (cub->sprite)
 	{
-		if (cub->sprite->z_buf)
-			free(cub->sprite->z_buf);
+		while (j < SPRITE_COUNT)
+		{
+			i = 0;
+			while (i < cub->sprite[j].text_count)
+			{
+				close_mlx(cub, cub->sprite[j].text[i]);
+				i++;
+			}
+			if (cub->sprite[j].text)
+				free(cub->sprite[j].text);
+			j++;
+		}
 		free(cub->sprite);
 	}
+	if (cub->z_buf)
+		free(cub->z_buf);
+	mlx_do_key_autorepeaton(cub->mlx.mlx);
+	close_mlx(cub, cub->mlx);
 	if (cub)
 		free(cub);
 	exit(0);
@@ -61,12 +80,12 @@ void	clear_screen(t_cub *cub)
 
 int	ft_key_choose(int key, t_cub *cub)
 {
-	printf("key : %d\n", key);
+	// printf("key : %d\n", key);
 	if (key == ESC)
 		ft_close(cub);
 	if (key == W || cub->press->w == 1)
 	{
-		printf("cub->press : %d\n", cub->press->w);
+		// printf("cub->press : %d\n", cub->press->w);
 		cub->press->w = 1;
 		//forward(cub);
 	}

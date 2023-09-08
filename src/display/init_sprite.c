@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-int	compare(const void *a, const void *b)
+static int	compare(const void *a, const void *b)
 {
 	return (strcmp(*(const char **)a, *(const char **)b));
 }
@@ -8,6 +8,7 @@ int	compare(const void *a, const void *b)
 int	sprite_text(t_cub **cub, char *file_name, t_mlx *text)
 {
 	text->win = NULL;
+	text->mlx = NULL;
 	text->img = mlx_xpm_file_to_image((*cub)->mlx.mlx,
 			file_name, &(text->win_size.x),
 			&(text->win_size.y));
@@ -17,6 +18,23 @@ int	sprite_text(t_cub **cub, char *file_name, t_mlx *text)
 			&(text->bpp),
 			&(text->linel), &(text->endian));
 	return (EXIT_SUCCESS);
+}
+
+static void	free_frames(char **frames, int size)
+{
+	int	i;
+
+	i = 0;
+	if (frames)
+	{
+		while (i < size)
+		{
+			if (frames[i])
+				free(frames[i]);
+			i++;
+		}
+		free(frames);
+	}
 }
 
 /**
@@ -48,31 +66,135 @@ int	iter_dir(t_cub **cub, t_sprite *sprite, char *dir_name)
 	}
 	closedir(directory);
 	qsort(file_names, sprite->text_count, sizeof(char *), compare);
-	(*cub)->sprite->text = malloc(sizeof(t_sprite) * (sprite->text_count));
+	sprite->text = malloc(sizeof(t_sprite) * (sprite->text_count));
+	if (!sprite->text)
+		return (free_frames(file_names, 1000), EXIT_FAILURE);
 	for (int i = 0; i < sprite->text_count; i++)
 	{
 		path = ft_strjoin(dir_name, file_names[i]); 
 		if (!path)
-			return (EXIT_FAILURE);
-		sprite_text(cub, path, &((*cub)->sprite->text[i]));
-		(*cub)->sprite->text[i].i = i;
-		// printf("file : %s\n", file_names[i]);
+			return (free_frames(file_names, 1000), EXIT_FAILURE);
+		sprite_text(cub, path, &(sprite->text[i]));
 		free(file_names[i]);
 		free(path);
 	}
 	return (EXIT_SUCCESS);
 }
 
+static void	find_position(t_cub *cub, t_sprite *sprite, int v)
+{
+	int	valid_position;
+
+	valid_position = 0;
+    while (!valid_position)
+    {
+        sprite->pos.x = (double)rand() / RAND_MAX * (cub->map->map_size.x - 1);
+        sprite->pos.y = (double)rand() / RAND_MAX * (cub->map->map_size.y - 1);
+        if (sprite->pos.x < 0 || sprite->pos.x >= cub->map->map_size.x ||
+            sprite->pos.y < 0 || sprite->pos.y >= cub->map->map_size.y)
+            continue;
+        if (cub->map->map[(int)sprite->pos.y][(int)sprite->pos.x] == '1')
+            continue;
+        int collision = 0;
+        for (int i = 0; i < v; i++)
+        {
+			if (sprite != &(cub->sprite[i]))
+			{
+				double dx = sprite->pos.x - cub->sprite[i].pos.x;
+				double dy = sprite->pos.y - cub->sprite[i].pos.y;
+				double distance = sqrt(dx*dx + dy*dy);
+				if (distance < 0.01)  // adjust the value as needed
+				{
+					collision = 1;
+					break;
+				}
+			}
+        }
+        if (collision)
+        {
+            continue;
+        }
+        valid_position = 1;
+    }
+}
+
+// static void find_position(t_cub *cub, t_sprite *sprite, int v)
+// {
+// 	int	valid_position;
+// 	t_vec2d	pos;
+
+// 	valid_position = 0;
+//     while (!valid_position)
+//     {
+//         pos.x = (double)rand() / RAND_MAX * (cub->map->map_size.x - 1);
+//         pos.y = (double)rand() / RAND_MAX * (cub->map->map_size.y - 1);
+//         if (pos.x < 0 || pos.x >= cub->map->map_size.x ||
+//             pos.y < 0 || pos.y >= cub->map->map_size.y)
+//             continue;
+//         if (cub->map->map[(int)pos.y][(int)sprite->pos.x] == '1')
+//             continue;
+//         int collision = 0;
+//         for (int i = 0; i < v; i++)
+//         {
+// 			if (sprite != &(cub->sprite[i]))
+// 			{
+// 				double dx = sprite->pos.x - cub->sprite[i].pos.x;
+// 				double dy = sprite->pos.y - cub->sprite[i].pos.y;
+// 				double distance = sqrt(dx*dx + dy*dy);
+// 				printf("distance : %f\n", distance);
+// 				if (distance < 0.01)  // adjust the value as needed
+// 				{
+// 					collision = 1;
+// 					printf("here\n");
+// 					break;
+// 				}
+// 			}
+//         }
+//         if (collision)
+//         {
+//             continue;
+//         }
+//         valid_position = 1;
+//     }
+// 	return (pos);
+// }
+
 int	init_sprite(t_cub **cub)
 {
-	(*cub)->sprite = malloc(sizeof(t_sprite));
+	int		i;
+	char	**frames;
+
+	frames = malloc(sizeof(char *) * SPRITE_COUNT);
+	if (!frames)
+		return (EXIT_FAILURE);
+	frames[0] = ft_strdup("frames_book/");
+	frames[1] = ft_strdup("frames_green2/");
+	frames[2] = ft_strdup("frames_purple2/");
+	frames[3] = ft_strdup("frames_red2/");
+	i = 0;
+	(*cub)->sprite = malloc(sizeof(t_sprite) * SPRITE_COUNT);
 	if (!(*cub)->sprite)
-		return (EXIT_FAILURE);
-	(*cub)->sprite->z_buf = malloc(sizeof(double) * (*cub)->mlx.win_size.x);
-	if (!(*cub)->sprite->z_buf)
-		return (EXIT_FAILURE);
-	ft_bzero((*cub)->sprite->z_buf, (*cub)->mlx.win_size.x);
-	if (iter_dir(cub, (*cub)->sprite, "frames/") == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		return (free_frames(frames, SPRITE_COUNT), EXIT_FAILURE);
+	while (i < SPRITE_COUNT)
+	{
+		(*cub)->sprite[i].text_count = 0;
+		(*cub)->sprite[i].current_frame = 0;
+		(*cub)->sprite->text_id = 0;
+		find_position(*cub, &((*cub)->sprite[i]), i);
+		(*cub)->sprite[i].initial_pos.x = (*cub)->sprite[i].pos.x;
+		(*cub)->sprite[i].initial_pos.y = (*cub)->sprite[i].pos.y;
+		if (iter_dir(cub, &((*cub)->sprite[i]), frames[i]) == EXIT_FAILURE)
+			return (free_frames(frames, SPRITE_COUNT), EXIT_FAILURE);
+		i++;
+	}
+	// (*cub)->sprite_pos = malloc(sizeof(int) * SPRITE_COUNT);
+	// if (!(*cub)->sprite_pos)
+	// 	return (free_frames(frames, SPRITE_COUNT), EXIT_FAILURE);
+	// i = 0;
+	// while (i < SPRITE_COUNT)
+	// {
+	// 	(*cub)->sprite_pos[i] = find_position(*cub, &((*cub)->sprite[i]), i);
+	// 	i++;
+	// }
+	return (free_frames(frames, SPRITE_COUNT), EXIT_SUCCESS);
 }

@@ -1,9 +1,11 @@
-NO             textures/mossy_cobblestone.xpm
-F 122,90,200
-C 99,98,0
-SO                       textures/cobblestone.xpm     
-                  WE          textures/netherrack.xpm 
-EA            textures/cobbled_deepslate.xpm
+
+NO             textures-mineraux/rouge-fonce.xpm  
+F 11,77,9
+C 186,224,243
+
+SO                       textures-mineraux/rose.xpm     
+                  WE          textures-mineraux/pierre.xpm 
+EA            textures-mineraux/vert-fonce.xpm
         1111111111111111111111111
         1000000001100000000000001
         1011000001110000000000001
