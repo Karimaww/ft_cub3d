@@ -99,13 +99,6 @@ typedef struct s_color
 	int	b;
 }		t_color;
 
-typedef struct s_door
-{
-	int				open;
-	t_vec2			pos;
-	struct s_door	*next;
-}		t_door;
-
 typedef struct s_map
 {
 	char	*no;
@@ -116,7 +109,6 @@ typedef struct s_map
 	t_color	c;
 	t_vec2	player;
 	char	**map;
-	t_door	*lst_doors;
 	t_vec2	map_size;
 }			t_map;
 
@@ -228,9 +220,6 @@ void	init_color(t_color *color);
 int		get_color(t_ray **ray, t_cub *cub);
 int		check_colors(char **rgb, t_color *color);
 
-int		find_doors(t_map **map);
-int		free_door(t_door **lst);
-
 /*----display utils----*/
 int		ft_key_choose(int key, t_cub *cub);
 int		mouse_hook(t_cub *cub);
@@ -271,6 +260,5 @@ void	right(t_cub *cub);
 void	rot_left(t_cub *cub);
 void	rot_right(t_cub *cub);
 void	open_door(t_cub *cub);
-int		looking_at_door(t_cub *cub, t_ray *ray);
 
 #endif

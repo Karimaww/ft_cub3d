@@ -19,10 +19,14 @@ void	init_raydir(t_ray **ray, t_cub *cub, int x)
 	(*ray)->delta_dist.y = fabs(1 / (*ray)->ray_dir.y);
 }
 
+/**
+ * @brief Checks the length of ray from current position to next x or y-side
+ * Determines what direction to step in x or y-direction (either +1 or -1)
+ * @param cub
+ * @return void
+ */
 void	init_side_dist(t_ray **ray)
 {
-	//length of ray from current position to next x or y-side
-	//what direction to step in x or y-direction (either +1 or -1)
 	if ((*ray)->ray_dir.x < 0)
 	{
 		(*ray)->step.x = -1;
@@ -49,6 +53,12 @@ void	init_side_dist(t_ray **ray)
 	}
 }
 
+/**
+ * @brief Performs the dda algorithm which checks if a wall was hit and
+ * advances until it is.
+ * @param cub
+ * @return void
+ */
 void	dda_algo(t_ray **ray, t_cub *cub)
 {
 	//was there a wall hit?
@@ -70,14 +80,8 @@ void	dda_algo(t_ray **ray, t_cub *cub)
 			(*ray)->side = 1;
 		}
 		//Check if ray has hit a wall
-		if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '1')
-			(*ray)->hit = 1;
-		// if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '2')
-		// 	(*ray)->hit = 0;
-		// if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '2'
-		// 	&& draw_door(*ray, cub))
-		// 	(*ray)->hit = 2;
-		if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '2')
+		if (cub->map->map[(*ray)->map.y][(*ray)->map.x] == '1'
+			|| cub->map->map[(*ray)->map.y][(*ray)->map.x] == '2')
 			(*ray)->hit = 1;
 	}
 }
@@ -86,13 +90,12 @@ int	get_color(t_ray **ray, t_cub *cub)
 {
 	int		color;
 
-	if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '0')
+	if (cub->map->map[(*ray)->map.y][(*ray)->map.x] == '0')
 		color = RGB_BLACK;
-	if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '1')
+	if (cub->map->map[(*ray)->map.y][(*ray)->map.x] == '1')
 		color = RGB_RED;
-	if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == ' ')
+	if (cub->map->map[(*ray)->map.y][(*ray)->map.x] == ' ')
 		color = RGB_GREEN;
-	//give x and y sides different brightness
 	if ((*ray)->side == 1)
 		color = color / 2;
 	return (color);

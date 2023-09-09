@@ -50,18 +50,6 @@ int	is_line_for_map(char *line)
 	return (EXIT_SUCCESS);
 }
 
-// void	print_lst(t_door *lst)
-// {
-// 	t_door	*tmp;
-
-// 	tmp = lst;
-// 	while (tmp)
-// 	{
-// 		printf("[x :%d y : %d open : %d]\n", tmp->pos.x, tmp->pos.y, tmp->open);
-// 		tmp = tmp->next;
-// 	}
-// }
-
 int	get_map(t_map **map, char *line, int fd)
 {
 	t_lst	*lst;
@@ -86,9 +74,6 @@ int	get_map(t_map **map, char *line, int fd)
 	(*map)->map = create_map(lst, &((*map)->map_size));
 	if (!(*map)->map)
 		return (free(line), free_lst(&lst), EXIT_FAILURE);
-	if (find_doors(map) == EXIT_FAILURE)
-		return (free(line), free_lst(&lst), EXIT_FAILURE);
-	// print_lst((*map)->lst_doors);
 	return (free_lst(&lst), EXIT_SUCCESS);
 }
 
@@ -106,7 +91,6 @@ t_map	*init_map(void)
 	init_color(&(map->f));
 	init_color(&(map->c));
 	map->map = NULL;
-	map->lst_doors = NULL;
 	return (map);
 }
 

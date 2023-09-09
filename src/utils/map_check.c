@@ -55,8 +55,8 @@ int	check_player(t_map *map)
 			if (map->map[i][j] == 'N' || map->map[i][j] == 'S'
 				|| map->map[i][j] == 'E' || map->map[i][j] == 'W')
 			{
-				map->player.x = i;
-				map->player.y = j;
+				map->player.x = j;
+				map->player.y = i;
 				count++;
 			}
 			j++;

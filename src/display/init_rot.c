@@ -24,11 +24,11 @@ void	init_rot(t_cub *cub)
 
 	x = cub->map->player.x;
 	y = cub->map->player.y;
-	if (cub->map->map[x][y] == 'N')
+	if (cub->map->map[y][x] == 'N')
 		rot_angle(cub, -PI / 2);
-	else if (cub->map->map[x][y] == 'S')
+	else if (cub->map->map[y][x] == 'S')
 		rot_angle(cub, PI / 2);
-	else if (cub->map->map[x][y] == 'W')
+	else if (cub->map->map[y][x] == 'W')
 		rot_angle(cub, PI);
 }
 

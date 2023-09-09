@@ -86,78 +86,37 @@ static void	find_position(t_cub *cub, t_sprite *sprite, int v)
 	int	valid_position;
 
 	valid_position = 0;
-    while (!valid_position)
-    {
-        sprite->pos.x = (double)rand() / RAND_MAX * (cub->map->map_size.x - 1);
-        sprite->pos.y = (double)rand() / RAND_MAX * (cub->map->map_size.y - 1);
-        if (sprite->pos.x < 0 || sprite->pos.x >= cub->map->map_size.x ||
-            sprite->pos.y < 0 || sprite->pos.y >= cub->map->map_size.y)
-            continue;
-        if (cub->map->map[(int)sprite->pos.y][(int)sprite->pos.x] == '1')
-            continue;
-        int collision = 0;
-        for (int i = 0; i < v; i++)
-        {
+	while (!valid_position)
+	{
+		sprite->pos.x = (double)rand() / RAND_MAX * (cub->map->map_size.x - 1);
+		sprite->pos.y = (double)rand() / RAND_MAX * (cub->map->map_size.y - 1);
+		if (sprite->pos.x < 0 || sprite->pos.x >= cub->map->map_size.x ||
+			sprite->pos.y < 0 || sprite->pos.y >= cub->map->map_size.y)
+			continue ;
+		if (cub->map->map[(int)sprite->pos.y][(int)sprite->pos.x] == '1')
+			continue ;
+		int collision = 0;
+		for (int i = 0; i < v; i++)
+		{
 			if (sprite != &(cub->sprite[i]))
 			{
 				double dx = sprite->pos.x - cub->sprite[i].pos.x;
 				double dy = sprite->pos.y - cub->sprite[i].pos.y;
 				double distance = sqrt(dx*dx + dy*dy);
-				if (distance < 0.01)  // adjust the value as needed
+				if (distance < 0.01)
 				{
 					collision = 1;
-					break;
+					break ;
 				}
 			}
-        }
-        if (collision)
-        {
-            continue;
-        }
-        valid_position = 1;
-    }
+		}
+		if (collision)
+		{
+			continue;
+		}
+		valid_position = 1;
+	}
 }
-
-// static void find_position(t_cub *cub, t_sprite *sprite, int v)
-// {
-// 	int	valid_position;
-// 	t_vec2d	pos;
-
-// 	valid_position = 0;
-//     while (!valid_position)
-//     {
-//         pos.x = (double)rand() / RAND_MAX * (cub->map->map_size.x - 1);
-//         pos.y = (double)rand() / RAND_MAX * (cub->map->map_size.y - 1);
-//         if (pos.x < 0 || pos.x >= cub->map->map_size.x ||
-//             pos.y < 0 || pos.y >= cub->map->map_size.y)
-//             continue;
-//         if (cub->map->map[(int)pos.y][(int)sprite->pos.x] == '1')
-//             continue;
-//         int collision = 0;
-//         for (int i = 0; i < v; i++)
-//         {
-// 			if (sprite != &(cub->sprite[i]))
-// 			{
-// 				double dx = sprite->pos.x - cub->sprite[i].pos.x;
-// 				double dy = sprite->pos.y - cub->sprite[i].pos.y;
-// 				double distance = sqrt(dx*dx + dy*dy);
-// 				printf("distance : %f\n", distance);
-// 				if (distance < 0.01)  // adjust the value as needed
-// 				{
-// 					collision = 1;
-// 					printf("here\n");
-// 					break;
-// 				}
-// 			}
-//         }
-//         if (collision)
-//         {
-//             continue;
-//         }
-//         valid_position = 1;
-//     }
-// 	return (pos);
-// }
 
 int	init_sprite(t_cub **cub)
 {
@@ -187,14 +146,5 @@ int	init_sprite(t_cub **cub)
 			return (free_frames(frames, SPRITE_COUNT), EXIT_FAILURE);
 		i++;
 	}
-	// (*cub)->sprite_pos = malloc(sizeof(int) * SPRITE_COUNT);
-	// if (!(*cub)->sprite_pos)
-	// 	return (free_frames(frames, SPRITE_COUNT), EXIT_FAILURE);
-	// i = 0;
-	// while (i < SPRITE_COUNT)
-	// {
-	// 	(*cub)->sprite_pos[i] = find_position(*cub, &((*cub)->sprite[i]), i);
-	// 	i++;
-	// }
 	return (free_frames(frames, SPRITE_COUNT), EXIT_SUCCESS);
 }

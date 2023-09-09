@@ -64,8 +64,6 @@ int	free_map(t_map *map)
 			free(map->ea);
 		if (map->map)
 			free_tab(map->map);
-		if (map->lst_doors)
-			free_door(&(map->lst_doors));
 		free(map);
 	}
 	return (EXIT_SUCCESS);

@@ -41,6 +41,5 @@ int	init_textures(t_cub **cub)
 	if (!(*cub)->north.img || !(*cub)->south.img
 		|| !(*cub)->west.img || !(*cub)->east.img || !(*cub)->door.img)
 		return (printf("Failed to open .xpm file\n"), EXIT_FAILURE);
-	// printf("text w : %d h %d\n", (*cub)->west.win_size.x, (*cub)->west.win_size.y);
 	return (text_addr(cub), EXIT_SUCCESS);
 }

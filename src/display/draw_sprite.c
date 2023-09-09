@@ -70,8 +70,8 @@ void	draw_obj(t_cub **cub, t_sprite *sprite)
 void	draw_sprite(t_cub **cub, t_ray *ray, t_sprite *sprite)
 {
 	//translate sprite position to relative to camera
-	sprite->pos.x = sprite->initial_pos.y;
-	sprite->pos.y = sprite->initial_pos.x;
+	sprite->pos.x = sprite->initial_pos.x;
+	sprite->pos.y = sprite->initial_pos.y;
 	sprite->pos.x -= ray->pos.x;
 	sprite->pos.y -= ray->pos.y;
 
