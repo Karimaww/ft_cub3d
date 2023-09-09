@@ -72,6 +72,13 @@ void	dda_algo(t_ray **ray, t_cub *cub)
 		//Check if ray has hit a wall
 		if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '1')
 			(*ray)->hit = 1;
+		// if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '2')
+		// 	(*ray)->hit = 0;
+		// if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '2'
+		// 	&& draw_door(*ray, cub))
+		// 	(*ray)->hit = 2;
+		if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '2')
+			(*ray)->hit = 1;
 	}
 }
 

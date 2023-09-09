@@ -42,6 +42,12 @@ int	init_ray(t_ray **ray, t_cub *cub)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Press is a strcture that allows for a smoother rendering of the game
+ * and to press 2 or more keys at the same time.
+ * It works in par with mlx_do_key_autorepeatoff(cub->mlx.mlx)
+ * @param cub
+ */
 void	init_press(t_cub **cub)
 {
 	(*cub)->press = malloc(sizeof(t_press));
@@ -55,7 +61,7 @@ void	init_press(t_cub **cub)
 	(*cub)->press->rr = 0;
 }
 
-int		change_flag_0(int key, t_cub *cub)
+int	change_flag_0(int key, t_cub *cub)
 {
 	if (key == W)
 		cub->press->w = 0;
@@ -72,35 +78,25 @@ int		change_flag_0(int key, t_cub *cub)
 	return (0);
 }
 
-void	delay(int microseconds)
-{
-    struct timeval start_time, current_time;
-    gettimeofday(&start_time, NULL);
-
-    while (1) {
-        gettimeofday(&current_time, NULL);
-        int elapsed_time = (current_time.tv_sec - start_time.tv_sec) * 1000000 + (current_time.tv_usec - start_time.tv_usec);
-        
-        if (elapsed_time >= microseconds) {
-            break;
-        }
-    }
-}
-
-int		update_game(t_cub *cub)
+/**
+ * @brief This is the game loop, in order for the sprites to be animated, it
+ * checks if the game has gone through the loop 5 times and then it changes the
+ * texture (to get the next frame of the animation).
+ * @param cub
+ */
+int	update_game(t_cub *cub)
 {
 	int	i;
 
 	i = 0;
-    cub->frame_counter++;
-    if (cub->frame_counter >= 5)
+	cub->frame_counter++;
+	if (cub->frame_counter >= 5)
 	{
 		cub->frame_counter = 0;
 		while (i < SPRITE_COUNT)
 		{
-			cub->sprite[i].current_frame++;
-			if (cub->sprite[i].current_frame >= cub->sprite[i].text_count)
-				cub->sprite[i].current_frame = 0;
+			cub->sprite[i].current_frame = (cub->sprite[i].current_frame + 1)
+				% cub->sprite[i].text_count;
 			cub->sprite[i].text_id = cub->sprite[i].current_frame;
 			i++;
 		}
@@ -124,6 +120,7 @@ int		update_game(t_cub *cub)
 	return (0);
 }
 
+// remettre la souris au milieu
 int		handle_mouse(int x, int y, t_cub *cub)
 {
 	int	new_x;
@@ -177,7 +174,7 @@ t_cub	*init_cub(t_map *map)
 	// if (draw_cub(cub, ray) == EXIT_FAILURE)
 	// 	return (ft_close(cub), NULL);
 	//mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
-	mlx_hook(cub->mlx.win, ON_DESTROY, MKEYPRESS, mouse_hook, cub);
+	mlx_hook(cub->mlx.win, DestroyNotify, KeyPressMask, mouse_hook, cub);
 	mlx_hook(cub->mlx.win, KeyPress, KeyPressMask, ft_key_choose, cub);
 	mlx_hook(cub->mlx.win, KeyRelease, KeyReleaseMask, change_flag_0, cub);
 	mlx_hook(cub->mlx.win, MotionNotify, PointerMotionMask, handle_mouse, cub);

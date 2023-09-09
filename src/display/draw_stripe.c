@@ -52,30 +52,49 @@ void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x)
 	}
 }
 
-int		looking_at_door(t_cub *cub, t_ray *ray)
+int	looking_at_door(t_cub *cub, t_ray *ray)
 {
 	int	x;
 	int	y;
 
-	x = ray->pos.x + ray->dir.x;
-	y = ray->pos.y + ray->dir.y;
-	if (x >= 0 && x < cub->mlx.win_size.x
-		&& y >= 0 && y < cub->mlx.win_size.y
+	x = (int)(ray->pos.x + ray->dir.x);
+	y = (int)(ray->pos.y + ray->dir.y);
+	if (x >= 0 && x < cub->map->map_size.x
+		&& y >= 0 && y < cub->map->map_size.y
 		&& cub->map->map[x][y] == '2')
 		return (1);
 	return (0);
 }
 
+int	draw_door(t_ray *ray, t_cub *cub)
+{
+	t_door	*lst;
+
+	lst = cub->map->lst_doors;
+	while (lst)
+	{
+		if (lst->pos.x == ray->map.x && lst->pos.y == ray->map.y
+			&& lst->open == 0)
+			return (1);
+		lst = lst->next;
+	}
+	return (0);
+}
+
 void	draw_stripe(t_ray **ray, t_cub *cub, int x)
 {
-	if ((*ray)->side == 1 && (*ray)->ray_dir.y > 0)
+	// if ((*ray)->hit == 2)
+	// 	draw_side(cub->door, ray, cub, x);
+	// if (looking_at_door(cub, *ray))
+	// 	draw_side(cub->door, ray, cub, x);
+	if (cub->map->map[(*ray)->map.x][(*ray)->map.y] == '2')
+		draw_side(cub->door, ray, cub, x);
+	else if ((*ray)->side == 1 && (*ray)->ray_dir.y > 0)
 		draw_side(cub->north, ray, cub, x);
 	else if ((*ray)->side == 1 && (*ray)->ray_dir.y <= 0)
 		draw_side(cub->south, ray, cub, x);
 	else if ((*ray)->side == 0 && (*ray)->ray_dir.x > 0)
 		draw_side(cub->east, ray, cub, x);
-	else if ((*ray)->side == 0 && (*ray)->ray_dir.x <= 0)
+	else
 		draw_side(cub->west, ray, cub, x);
-	if (looking_at_door(cub, *ray))
-		draw_side(cub->door, ray, cub, x);
 }

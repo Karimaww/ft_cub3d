@@ -84,16 +84,9 @@ int	ft_key_choose(int key, t_cub *cub)
 	if (key == ESC)
 		ft_close(cub);
 	if (key == W || cub->press->w == 1)
-	{
-		// printf("cub->press : %d\n", cub->press->w);
 		cub->press->w = 1;
-		//forward(cub);
-	}
 	if (key == A || cub->press->a == 1)
-	{
 		cub->press->a = 1;
-		//left(cub);
-	}
 	if (key == S || cub->press->s == 1)
 	{
 		cub->press->s = 1;
@@ -114,6 +107,8 @@ int	ft_key_choose(int key, t_cub *cub)
 		cub->press->rr = 1;
 		rot_right(cub);
 	}
+	if (key == SPC)
+		open_door(cub);
 	clear_screen(cub);
 	draw_cub(cub, cub->ray);
 	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);

@@ -24,7 +24,8 @@ SOURCES_PARSING 	=	parse.c			\
 						parse_params.c	\
 						main.c			\
 
-SOURCES_UTILS 		=	lst_utils.c		\
+SOURCES_UTILS 		=	find_doors.c	\
+						lst_utils.c		\
 						map_utils.c		\
 						map_check.c		\
 						mlx_actions.c	\
