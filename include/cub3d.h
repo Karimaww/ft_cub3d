@@ -33,6 +33,7 @@
 # define VMOVE 0.0
 # define UDIV 2
 # define VDIV 2
+# define SPRITE_COUNT 4
 
 #ifdef __linux__
 # define ESC 65307
@@ -164,14 +165,16 @@ typedef struct s_sprite
 	t_vec2		draw_start;
 	t_vec2		draw_end;
 	t_vec2d		pos;
+	t_vec2d		initial_pos;
 	t_vec2d		transform;
 	double		inv_det;
-	double		*z_buf;
 	int			v_move;
 	int			screen_x;
 	int			h;
 	int			w;
 	int			text_count;
+	int			text_id;
+	int			current_frame;
 }				t_sprite;
 
 typedef struct s_cub
@@ -183,9 +186,11 @@ typedef struct s_cub
 	t_mlx		south;
 	t_mlx		west;
 	t_mlx		east;
+	t_mlx		door;
 	t_sprite	*sprite;
+	double		*z_buf;
 	t_ray		*ray;
-	int			sprite_text_id;
+	int			frame_counter;
 }			t_cub;
 
 /*----parsing----*/
@@ -228,7 +233,7 @@ t_cub	*init_cub(t_map *map);
 int		init_textures(t_cub **cub);
 
 int		init_sprite(t_cub **cub);
-void	draw_sprite(t_cub **cub, t_ray *ray);
+void	draw_sprite(t_cub **cub, t_ray *ray, t_sprite *sprite);
 void	texture_on_img(t_mlx *texture, t_cub **cub,
 			int x, int y, int tex_x, int tex_y);
 
