@@ -78,6 +78,24 @@ int	change_flag_0(int key, t_cub *cub)
 	return (0);
 }
 
+void draw_square(t_cub *cub, int x, int y, int color)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < cub->square_size)
+	{
+		j = 0;
+		while (j < cub->square_size)
+		{
+			pixel_put(&(cub->mlx), x + i, y + j, color);
+			j++;
+		}
+		i++;
+	}
+}
+
 /**
  * @brief This is the game loop, in order for the sprites to be animated, it
  * checks if the game has gone through the loop 5 times and then it changes the
@@ -111,9 +129,9 @@ int	update_game(t_cub *cub)
 	if (cub->press->d)
 		right(cub);
 	if (cub->press->rl)
-		rot_left(cub);
+		rot_left(cub, 1.0);
 	if (cub->press->rr)
-		rot_right(cub);
+		rot_right(cub, 1.0);
 	if (draw_cub(cub, cub->ray) == EXIT_FAILURE)
 		return (ft_close(cub), 1);
 	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
@@ -123,22 +141,19 @@ int	update_game(t_cub *cub)
 // remettre la souris au milieu
 int		handle_mouse(int x, int y, t_cub *cub)
 {
-	int	new_x;
+	int		new_x;
+	double	speed;
 
 	(void)y;
 	new_x = x - (cub->mlx.win_size.x / 2);
+	speed = new_x / (double)(cub->mlx.win_size.x / 2);
+	if (fabs(speed) < 0.1)
+		return (0);
 	if (new_x < 0)
-	{
-		// cub->press->rl = 1;
-		// cub->press->rr = 0;
-		rot_left(cub);
-	}
+		rot_left(cub, -speed);
 	else
-	{
-		// cub->press->rl = 0;
-		// cub->press->rr = 1;
-		rot_right(cub);
-	}
+		rot_right(cub, speed);
+	mlx_mouse_move(cub->mlx.mlx, cub->mlx.win, cub->mlx.win_size.x / 2, cub->mlx.win_size.y / 2);
 	return (0);
 }
 
@@ -153,6 +168,7 @@ t_cub	*init_cub(t_map *map)
 	cub->map = map;
 	cub->mlx.win_size.x = 1200;
 	cub->mlx.win_size.y = 800;
+	cub->square_size = 3;
 	cub->z_buf = malloc(sizeof(double) * cub->mlx.win_size.x);
 	if (!cub->z_buf)
 		return (ft_close(cub), NULL);
@@ -175,6 +191,9 @@ t_cub	*init_cub(t_map *map)
 	mlx_hook(cub->mlx.win, KeyPress, KeyPressMask, ft_key_choose, cub);
 	mlx_hook(cub->mlx.win, KeyRelease, KeyReleaseMask, change_flag_0, cub);
 	mlx_hook(cub->mlx.win, MotionNotify, PointerMotionMask, handle_mouse, cub);
+	//mlx_mouse_hide(cub->mlx.mlx, cub->mlx.win);
 	mlx_loop_hook(cub->mlx.mlx, &update_game, cub);
+	//pas tres joli lol
+	//mlx_mouse_move(cub->mlx.mlx, cub->mlx.win, cub->mlx.win_size.x / 2, cub->mlx.win_size.y / 2);
 	return (cub);
 }

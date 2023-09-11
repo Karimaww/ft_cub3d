@@ -191,6 +191,7 @@ typedef struct s_cub
 	t_sprite	*sprite;
 	double		*z_buf;
 	t_ray		*ray;
+	int			square_size;
 	int			frame_counter;
 }			t_cub;
 
@@ -257,8 +258,11 @@ void	forward(t_cub *cub);
 void	back(t_cub *cub);
 void	left(t_cub *cub);
 void	right(t_cub *cub);
-void	rot_left(t_cub *cub);
-void	rot_right(t_cub *cub);
+void	rot_left(t_cub *cub, double speed);
+void	rot_right(t_cub *cub, double speed);
 void	open_door(t_cub *cub);
+
+/*----minimap----*/
+void draw_square(t_cub *cub, int x, int y, int color);
 
 #endif

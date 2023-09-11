@@ -1,11 +1,11 @@
 
-NO             textures-mineraux/rouge-fonce.xpm  
-F 11,77,9
-C 186,224,243
+NO             textures-mineraux/wall_red.xpm  
+F 64,64,64
+C 20,21,47
 
-SO                       textures-mineraux/rose.xpm     
-                  WE          textures-mineraux/pierre.xpm 
-EA            textures-mineraux/vert-fonce.xpm
+SO                       textures-mineraux/wall_grey.xpm     
+                  WE          textures-mineraux/wall_lava.xpm 
+EA            textures-mineraux/wall_rock.xpm
         1111111111111111111111111
         1000000001100000000000001
         1011000001110000000000001

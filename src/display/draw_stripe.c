@@ -8,7 +8,7 @@ void	texture_on_img(t_mlx *texture, t_cub **cub,
 	int	b;
 
 	if (!((tex_y >= 0 && tex_y < texture->win_size.y
-		&& tex_x >= 0 && tex_x < texture->win_size.x)))
+				&& tex_x >= 0 && tex_x < texture->win_size.x)))
 		return ;
 	r = texture->addr[(int)(tex_y * texture->linel + (double)tex_x * ((double)texture->bpp / 8))]; 
 	g = texture->addr[(int)(tex_y * texture->linel + (double)tex_x * ((double)texture->bpp / 8) + 1)];
@@ -20,13 +20,23 @@ void	texture_on_img(t_mlx *texture, t_cub **cub,
 	(*cub)->mlx.addr[y * (*cub)->mlx.linel + x * ((*cub)->mlx.bpp / 8) + 2] = b;
 }
 
+/**
+ * @brief Draws a wal, step is how much to increase the texture coordinate
+ * per screen pixel.
+ * tex_pos is the starting texture coordinate and we cast the texture coordinate
+ * to integer, and mask with (texHeight - 1) in case of overflow
+ * @param side 
+ * @param ray 
+ * @param cub 
+ * @param x 
+ */
 void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x)
 {
 	double	wall_x;
 	int		tex_x;
-	int		tex_y;
 	double	step;
 	double	tex_pos;
+	int		y;
 
 	if ((*ray)->side == 0)
 		wall_x = (*ray)->pos.y + (*ray)->perp_dist * (*ray)->ray_dir.y;
@@ -38,17 +48,16 @@ void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x)
 		tex_x = side.win_size.x - tex_x - 1;
 	if ((*ray)->side == 1 && (*ray)->ray_dir.y < 0)
 		tex_x = side.win_size.x - tex_x - 1;
-	// How much to increase the texture coordinate per screen pixel
 	step = 1.0 * side.win_size.y / (*ray)->line_h;
-	// Starting texture coordinate
 	tex_pos = ((*ray)->draw_start - cub->mlx.win_size.y / 2
-		+ (*ray)->line_h / 2) * step;
-	for(int y = (*ray)->draw_start; y < (*ray)->draw_end; y++)
+			+ (*ray)->line_h / 2) * step;
+	y = (*ray)->draw_start;
+	while (y < (*ray)->draw_end)
 	{
-		// Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-		tex_y = (int)tex_pos & (side.win_size.y - 1);
 		tex_pos += step;
-		texture_on_img(&side, &cub, x, y, tex_x, tex_y);
+		texture_on_img(&side, &cub, x, y, tex_x,
+			(int)tex_pos & (side.win_size.y - 1));
+		y++;
 	}
 }
 

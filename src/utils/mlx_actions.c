@@ -100,12 +100,12 @@ int	ft_key_choose(int key, t_cub *cub)
 	if (key == RL || cub->press->rl == 1)
 	{
 		cub->press->rl = 1;
-		rot_left(cub);
+		rot_left(cub, 1.0);
 	}
 	if (key == RR || cub->press->rr == 1)
 	{
 		cub->press->rr = 1;
-		rot_right(cub);
+		rot_right(cub, 1.0);
 	}
 	if (key == SPC)
 		open_door(cub);
