@@ -12,13 +12,16 @@
 # include "mlx_int.h"
 # include <dirent.h>
 # include <string.h>
-#include <sys/time.h>
+# include <sys/time.h>
+# include <time.h>
 
 # define RGB_RED 0xFFA07A
 # define RGB_BLACK 0x000000
 # define RGB_GREEN 	0x7CFC00
 # define RGB_SKY 0x7BCAEC
 # define RGB_FLOOR 0x1957B5
+# define DARK_BLUE 0x000066
+# define GREY 0x606060
 
 # define KEYPRESS 2
 # define KEYRELEASE 3
@@ -31,8 +34,8 @@
 # define PI 3.14159
 # define OFFSET 0.25
 # define VMOVE 0.0
-# define UDIV 2
-# define VDIV 2
+# define UDIV 5
+# define VDIV 5
 # define SPRITE_COUNT 4
 
 #ifdef __linux__
@@ -176,6 +179,7 @@ typedef struct s_sprite
 	int			text_count;
 	int			text_id;
 	int			current_frame;
+	double		dist;
 }				t_sprite;
 
 typedef struct s_cub
@@ -261,8 +265,10 @@ void	right(t_cub *cub);
 void	rot_left(t_cub *cub, double speed);
 void	rot_right(t_cub *cub, double speed);
 void	open_door(t_cub *cub);
+int		verif_boundries(t_cub *cub, int x, int y);
 
 /*----minimap----*/
-void draw_square(t_cub *cub, int x, int y, int color);
+void	draw_square(t_cub *cub, int x, int y, int color);
+void	draw_line(t_cub *cub, t_vec2 v1, t_vec2 v2);
 
 #endif

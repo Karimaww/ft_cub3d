@@ -21,6 +21,7 @@ int	main(int ac, char **av, char **env)
 		return (printf("Error: env.\n"), EXIT_FAILURE);
 	if (ac != 2)
 		return (printf("Error: args number.\n"), EXIT_FAILURE);
+	srand(time(NULL));
 	//maybe check if av[1] is a .cub extension ?
 	map = parse(av[1]);
 	if (!map)

@@ -21,21 +21,25 @@ int	init_mlx(t_cub **cub)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Init the ray: pos.x and pos.y are the starting position.
+ * dir.x and dir.y is the initial direction vector.
+ * The rest are the 2D version of the camera plane. 
+ * @param ray 
+ * @param cub 
+ * @return int 
+ */
 int	init_ray(t_ray **ray, t_cub *cub)
 {
 	*ray = malloc(sizeof(t_ray));
 	if (!*ray)
 		return (printf("Error : Malloc of t_ray.n"), EXIT_FAILURE);
 	cub->ray = *ray;
-	//x and y start position
 	(*ray)->pos.x = cub->map->player.x + 0.5;
 	(*ray)->pos.y = cub->map->player.y + 0.5;
-	//initial direction vector
 	(*ray)->dir.x = -1;
 	(*ray)->dir.y = 0;
-	//the 2d raycaster version of camera plane
 	(*ray)->camera_x = 0;
-	//the 2d raycaster version of camera plane//the 2d raycaster version of camera plane
 	(*ray)->plane.x = 0;
 	(*ray)->plane.y = 0.66;
 	init_rot(cub);
@@ -60,7 +64,13 @@ void	init_press(t_cub **cub)
 	(*cub)->press->rl = 0;
 	(*cub)->press->rr = 0;
 }
-
+/**
+ * @brief This function is for the KeyRelease hook, it allows for smoother
+ * graphics by disabling auto-repeat.
+ * @param key 
+ * @param cub 
+ * @return int 
+ */
 int	change_flag_0(int key, t_cub *cub)
 {
 	if (key == W)
@@ -138,7 +148,6 @@ int	update_game(t_cub *cub)
 	return (0);
 }
 
-// remettre la souris au milieu
 int		handle_mouse(int x, int y, t_cub *cub)
 {
 	int		new_x;
@@ -168,7 +177,7 @@ t_cub	*init_cub(t_map *map)
 	cub->map = map;
 	cub->mlx.win_size.x = 1200;
 	cub->mlx.win_size.y = 800;
-	cub->square_size = 3;
+	cub->square_size = 10;
 	cub->z_buf = malloc(sizeof(double) * cub->mlx.win_size.x);
 	if (!cub->z_buf)
 		return (ft_close(cub), NULL);
@@ -191,9 +200,7 @@ t_cub	*init_cub(t_map *map)
 	mlx_hook(cub->mlx.win, KeyPress, KeyPressMask, ft_key_choose, cub);
 	mlx_hook(cub->mlx.win, KeyRelease, KeyReleaseMask, change_flag_0, cub);
 	mlx_hook(cub->mlx.win, MotionNotify, PointerMotionMask, handle_mouse, cub);
-	//mlx_mouse_hide(cub->mlx.mlx, cub->mlx.win);
+	mlx_mouse_hide(cub->mlx.mlx, cub->mlx.win);
 	mlx_loop_hook(cub->mlx.mlx, &update_game, cub);
-	//pas tres joli lol
-	//mlx_mouse_move(cub->mlx.mlx, cub->mlx.win, cub->mlx.win_size.x / 2, cub->mlx.win_size.y / 2);
 	return (cub);
 }

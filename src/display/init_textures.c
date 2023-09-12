@@ -1,5 +1,10 @@
 #include "cub3d.h"
 
+/**
+ * @brief Both of these functions open our textures for the walls by using the
+ * mlx.
+ * @param cub 
+ */
 void	text_addr(t_cub **cub)
 {
 	(*cub)->north.addr = mlx_get_data_addr((*cub)->north.img,
@@ -36,7 +41,8 @@ int	init_textures(t_cub **cub)
 			&(*cub)->west.win_size.x, &(*cub)->west.win_size.y);
 	(*cub)->east.img = mlx_xpm_file_to_image((*cub)->mlx.mlx, (*cub)->map->ea,
 			&(*cub)->east.win_size.x, &(*cub)->east.win_size.y);
-	(*cub)->door.img = mlx_xpm_file_to_image((*cub)->mlx.mlx, "textures-mineraux/door.xpm",
+	(*cub)->door.img = mlx_xpm_file_to_image((*cub)->mlx.mlx,
+			"textures-mineraux/door.xpm",
 			&(*cub)->door.win_size.x, &(*cub)->door.win_size.y);
 	if (!(*cub)->north.img || !(*cub)->south.img
 		|| !(*cub)->west.img || !(*cub)->east.img || !(*cub)->door.img)

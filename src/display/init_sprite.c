@@ -81,6 +81,13 @@ int	iter_dir(t_cub **cub, t_sprite *sprite, char *dir_name)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Find a valid position for our sprites. It aims to not put the sprites
+ * in walls or outside of the map and to not put them all together.
+ * @param cub 
+ * @param sprite 
+ * @param v 
+ */
 static void	find_position(t_cub *cub, t_sprite *sprite, int v)
 {
 	int	valid_position;
@@ -93,7 +100,15 @@ static void	find_position(t_cub *cub, t_sprite *sprite, int v)
 		if (sprite->pos.x < 0 || sprite->pos.x >= cub->map->map_size.x ||
 			sprite->pos.y < 0 || sprite->pos.y >= cub->map->map_size.y)
 			continue ;
-		if (cub->map->map[(int)sprite->pos.y][(int)sprite->pos.x] == '1')
+		/*if (cub->map->map[(int)sprite->pos.y + 1][(int)sprite->pos.x + 1] == '1' ||
+		cub->map->map[(int)sprite->pos.y - 1][(int)sprite->pos.x - 1] == '1' ||
+		cub->map->map[(int)sprite->pos.y + 1][(int)sprite->pos.x - 1] == '1' ||
+		cub->map->map[(int)sprite->pos.y - 1][(int)sprite->pos.x + 1] == '1')
+			sprite->pos.x
+		*/
+		if (cub->map->map[(int)sprite->pos.y][(int)sprite->pos.x] == '1' ||
+			cub->map->map[(int)sprite->pos.y][(int)sprite->pos.x] == ' ' ||
+			cub->map->map[(int)sprite->pos.y][(int)sprite->pos.x] == '2')
 			continue ;
 		int collision = 0;
 		for (int i = 0; i < v; i++)
@@ -103,7 +118,7 @@ static void	find_position(t_cub *cub, t_sprite *sprite, int v)
 				double dx = sprite->pos.x - cub->sprite[i].pos.x;
 				double dy = sprite->pos.y - cub->sprite[i].pos.y;
 				double distance = sqrt(dx*dx + dy*dy);
-				if (distance < 0.01)
+				if (distance < 0.1)
 				{
 					collision = 1;
 					break ;
@@ -111,10 +126,11 @@ static void	find_position(t_cub *cub, t_sprite *sprite, int v)
 			}
 		}
 		if (collision)
-		{
 			continue;
-		}
 		valid_position = 1;
+		printf("SPRITE: x[%f -> %d] y[%f -> %d] on map : %c\n",
+			sprite->pos.x, (int)(sprite->pos.x), sprite->pos.y, (int)(sprite->pos.y),
+			cub->map->map[(int)sprite->pos.y][(int)sprite->pos.x]);
 	}
 }
 
@@ -138,7 +154,7 @@ int	init_sprite(t_cub **cub)
 	{
 		(*cub)->sprite[i].text_count = 0;
 		(*cub)->sprite[i].current_frame = 0;
-		(*cub)->sprite->text_id = 0;
+		(*cub)->sprite[i].text_id = 0;
 		find_position(*cub, &((*cub)->sprite[i]), i);
 		(*cub)->sprite[i].initial_pos.x = (*cub)->sprite[i].pos.x;
 		(*cub)->sprite[i].initial_pos.y = (*cub)->sprite[i].pos.y;
