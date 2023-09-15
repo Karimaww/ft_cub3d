@@ -1,175 +1,144 @@
 #include "cub3d.h"
 
+// void	draw_player_triangle(t_cub *cub, int x, int y, int scale)
+// {
+// 	t_vec2	tip;
+// 	t_vec2	base1;
+// 	t_vec2	base2;
+
+// 	// Scale the map_dir and map_plane vectors to minimap scale
+// 	double dir_x = cub->ray->dir.x * scale;
+// 	double dir_y = cub->ray->dir.y * scale;
+// 	double plane_x = cub->ray->plane.x * scale;
+// 	double plane_y = cub->ray->plane.y * scale;
+
+// 	tip.x = x + (int)dir_x;
+// 	tip.y = y + (int)dir_y;
+// 	tip.color = RGB_RED;
+
+// 	// Calculate points for the base of the triangle
+// 	base1.x = x + (int)(plane_x / 2);
+// 	base1.y = y + (int)(plane_y / 2);
+// 	base1.color = RGB_RED;
+
+// 	base2.x = x - (int)(plane_x / 2);
+// 	base2.y = y - (int)(plane_y / 2);
+// 	base2.color = RGB_RED;
+
+// 	// // Draw the triangle by connecting the points
+// 	draw_line(cub, tip, base1);
+// 	draw_line(cub, tip, base2);
+// 	draw_line(cub, base1, base2);
+// }
 void	draw_player_triangle(t_cub *cub, int x, int y, int scale)
 {
-	// int i;
-	// int length = 15; // Length of the triangle sides
 	t_vec2	tip;
 	t_vec2	base1;
 	t_vec2	base2;
 
-	// Scale the map_dir and map_plane vectors to minimap scale
-	double dir_x = cub->ray->dir.x * scale;
-	double dir_y = cub->ray->dir.y * scale;
-	double plane_x = cub->ray->plane.x * scale;
-	double plane_y = cub->ray->plane.y * scale;
-
-	tip.x = x + (int)dir_x;
-	tip.y = y + (int)dir_y;
+	tip.x = (int)(x + cub->ray->dir.x * scale);
+	tip.y = (int)(y + cub->ray->dir.y * scale);
 	tip.color = RGB_RED;
-
-	// Calculate points for the base of the triangle
-	base1.x = x + (int)(plane_x / 2);
-	base1.y = y + (int)(plane_y / 2);
+	base1.x = (int)(x + (cub->ray->plane.x * scale / 2));
+	base1.y = (int)(y + (cub->ray->plane.y * scale / 2));
 	base1.color = RGB_RED;
-
-	base2.x = x - (int)(plane_x / 2);
-	base2.y = y - (int)(plane_y / 2);
+	base2.x = (int)(x - (cub->ray->plane.x * scale / 2));
+	base2.y = (int)(y - (cub->ray->plane.y * scale / 2));
 	base2.color = RGB_RED;
-
-	// // Draw the triangle by connecting the points
 	draw_line(cub, tip, base1);
 	draw_line(cub, tip, base2);
 	draw_line(cub, base1, base2);
 }
 
-int ft_min(int a, int b)
+void	draw_obj(t_cub *cub, t_vec2 map, t_vec2 i, t_vec2 start)
 {
-	if (a < b)
-		return (a);
-	return (b);
+	char	map_cell;
+	
+	map_cell = cub->map->map[map.y][map.x];
+	if (map_cell == '1')
+		draw_square(cub, i.x, i.y, DARK_BLUE);
+	else if (map_cell == '2')
+		draw_square(cub, i.x, i.y, RGB_SKY);
+	else if (map_cell == '0'
+		|| map_cell == '3' || map_cell == 'W' || map_cell == 'E'
+		|| map_cell == 'N' || map_cell == 'S')
+		draw_square(cub, i.x, i.y, GREY);
+	i.x = (cub->ray->pos.x - start.x + MAP_X_OFFSET) * MAP_SCALE;
+	i.y = (cub->ray->pos.y - start.y + MAP_Y_OFFSET) * MAP_SCALE;
+	draw_player_triangle(cub, i.x, i.y, MAP_SCALE);
 }
 
-int ft_max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	return (b);
-}
+// void	check_start(int *x, int *y)
+// {
+	
+// }
 
 void	draw_minimap(t_cub *cub)
 {
-	int x;
-	int y;
-	int xi;
-	int yi;
-	int minimap_x_offset = 10;
-	int minimap_y_offset = 10;
-	int minimap_scale = 10;
-	int minimap_size_x = 17; // Adjust this to change the minimap size
-	int minimap_size_y = 11;  // Adjust this to change the minimap size
+	t_vec2	i;
+	t_vec2	pos;
+	t_vec2	start;
+	t_vec2	map;
 
-	// Calculate the starting position of the minimap based on player's position
-	int start_x = cub->ray->pos.x - minimap_size_x / 2;
-	int start_y = cub->ray->pos.y - minimap_size_y / 2;
+	pos.x = 0;
+	pos.y = 0;
+	start.x = cub->ray->pos.x - MAP_SIZE_X / 2;
+	start.y = cub->ray->pos.y - MAP_SIZE_Y / 2;
+	if (start.x < 0)
+		start.x = 0;
+	if (start.y < 0)
+		start.y = 0;
+	if (start.x + MAP_SIZE_X > cub->map->map_size.x)
+		start.x = cub->map->map_size.x - MAP_SIZE_X;
+	if (start.y + MAP_SIZE_Y > cub->map->map_size.y)
+		start.y = cub->map->map_size.y - MAP_SIZE_Y;
 
-	// Ensure the minimap view stays within the map boundaries
-	if (start_x < 0)
-		start_x = 0;
-	if (start_y < 0)
-		start_y = 0;
-	if (start_x + minimap_size_x > cub->map->map_size.x)
-		start_x = cub->map->map_size.x - minimap_size_x;
-	if (start_y + minimap_size_y > cub->map->map_size.y)
-		start_y = cub->map->map_size.y - minimap_size_y;
-
-	for (y = 0; y < minimap_size_y; y++)
+	while (pos.y < MAP_SIZE_Y)
 	{
-		for (x = 0; x < minimap_size_x; x++)
+		while (pos.x < MAP_SIZE_X)
 		{
-			int map_x = start_x + x;
-			int map_y = start_y + y;
+			map.x = start.x + pos.x;
+			map.y = start.y + pos.y;
 
-			xi = (x + minimap_x_offset) * minimap_scale;
-			yi = (y + minimap_y_offset) * minimap_scale;
+			i.x = (pos.x + MAP_X_OFFSET) * MAP_SCALE;
+			i.y = (pos.y + MAP_Y_OFFSET) * MAP_SCALE;
 
-			if (map_y < 0 || map_y >= cub->map->map_size.y
-				|| map_x < 0 || map_x >= cub->map->map_size.x)
+			if (map.y < 0 || map.y >= cub->map->map_size.y
+				|| map.x < 0 || map.x >= cub->map->map_size.x)
 				continue ;
-			char map_cell = cub->map->map[map_y][map_x];
-
-			// Draw the map cells based on their content
-			if (map_cell == '1')
-				draw_square(cub, xi, yi, DARK_BLUE);
-			else if (map_cell == '2')
-				draw_square(cub, xi, yi, RGB_SKY);
-			else if (map_cell == '0'
-				|| map_cell == '3' || map_cell == 'W' || map_cell == 'E'
-				|| map_cell == 'N' || map_cell == 'S')
-				draw_square(cub, xi, yi, GREY);
-			// Calculate the position of the player on the minimap
-			xi = (cub->ray->pos.x - start_x + minimap_x_offset) * minimap_scale;
-			yi = (cub->ray->pos.y - start_y + minimap_y_offset) * minimap_scale;
-			// draw_square(cub, xi, yi, RGB_RED);
-			draw_player_triangle(cub, xi, yi, minimap_scale);
+			draw_obj(cub, map, i, start);
+			pos.x++;
 		}
+		pos.y++;
 	}
 }
 
-// void    draw_minimap(t_cub *cub)
-// {
-//     int    x;
-//     int    y;
-//     int    xi;
-//     int    yi;
-//     int    minimap_x_offset = 10;
-//     int    minimap_y_offset = 10;
-//     int    minimap_scale = 10;
-//     int    radius = 50;
-//     int    xmin = ft_max(0, cub->ray->pos.x - radius);
-//     int    xmax = ft_min(cub->map->map_size.x, cub->ray->pos.x + radius);
-//     int    ymin = ft_max(0, cub->ray->pos.y - radius);
-//     int    ymax = ft_min(cub->map->map_size.y, cub->ray->pos.y + radius);
-//     printf("xmin : %d, xmax : %d, ymin : %d, ymax : %d\n", xmin, xmax, ymin, ymax);
+static void	swap_sprites(t_sprite *a, t_sprite *b)
+{
+	t_sprite	tmp;
 
-//     y = ymin;
-//     while (y < ymax)
-//     {
-//         x = xmin;
-//         while (x < xmax)
-//         {
-//             // xi = x *  cub->mlx.win_size.x / cub->map->map_size.x / 5;
-//             // yi = y * cub->mlx.win_size.y / cub->map->map_size.y / 5;
-//             // xi = cub->mlx.win_size.x - minimap_x_offset - (cub->map->map_size.x - x) * minimap_scale;
-//             // yi = cub->mlx.win_size.y - minimap_y_offset - (cub->map->map_size.y - y) * minimap_scale;
-// 			xi = (cub->map->map_size.x - x) * minimap_scale;
-//             yi = (cub->map->map_size.y - y) * minimap_scale;
-// 			printf("xi : %d yi : %d\n", xi, yi);
-//             if (cub->map->map[y][x] == '0'
-//                 || cub->map->map[y][x] == '3')
-//                 draw_square(cub, xi , yi, 0x00FFFF);
-//             else if (cub->map->map[y][x] == '1')
-//                 draw_square(cub, xi, yi, 0xF0F00);
-//             else if (cub->map->map[y][x] == '2')
-//                 draw_square(cub, xi, yi, 0x0000FF);
-//             // if (xi == cub->sprite[0].initial_pos.x && yi == cub->sprite[0].initial_pos.y)
-//             //     draw_square(cub, xi, yi, 0x0000FF);
-//             //if (yi == cub->ray->pos.y && xi == cub->ray->pos.x)
-//             //     draw_square(cub, xi, yi, 0xFF0000);
-//             x++;
-//         }
-//         y++;
-//     }
-//     int square = cub->square_size;
-//     cub->square_size = 5;
-// 	draw_player_triangle(cub, cub->mlx.win_size.x - minimap_x_offset - (cub->map->map_size.x - cub->ray->pos.x) * minimap_scale, cub->mlx.win_size.y - minimap_y_offset - (cub->map->map_size.y - cub->ray->pos.y) * minimap_scale, minimap_scale);
-//     // draw_square(cub, cub->mlx.win_size.x - minimap_x_offset - (cub->map->map_size.x - cub->ray->pos.x) * minimap_scale, cub->mlx.win_size.y - minimap_y_offset - (cub->map->map_size.y - cub->ray->pos.y) * minimap_scale, 0xFF0000);
-//     cub->square_size = square;
-// }
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
 
+/**
+ * @brief Sort the sprites in order of distance so that if you look at one 
+ * sprite through the over it will only show the sprite closest to you.
+ * @param cub 
+ */
 static void	sort_sprites(t_cub *cub)
 {
-	int	i;
-	int	j;
-	t_sprite tmp;
+	int			i;
+	int			j;
 
 	i = 0;
 	while (i < SPRITE_COUNT)
 	{
 		cub->sprite[i].dist = ((cub->ray->pos.x - cub->sprite[i].initial_pos.x)
-			* (cub->ray->pos.x - cub->sprite[i].initial_pos.x)
-			+ (cub->ray->pos.y - cub->sprite[i].initial_pos.y)
-			* (cub->ray->pos.y - cub->sprite[i].initial_pos.y)); 
+				* (cub->ray->pos.x - cub->sprite[i].initial_pos.x)
+				+ (cub->ray->pos.y - cub->sprite[i].initial_pos.y)
+				* (cub->ray->pos.y - cub->sprite[i].initial_pos.y));
 		++i;
 	}
 	i = 0;
@@ -179,22 +148,18 @@ static void	sort_sprites(t_cub *cub)
 		while (j < SPRITE_COUNT)
 		{
 			if (cub->sprite[i].dist < cub->sprite[j].dist)
-			{
-				tmp = cub->sprite[i];
-				cub->sprite[i] = cub->sprite[j];
-				cub->sprite[j] = tmp;
-			}
+				swap_sprites(&(cub->sprite[i]), &(cub->sprite[j]));
 			++j;
 		}
 		++i;
 	}
 }
+
 int	draw_cub(t_cub *cub, t_ray *ray)
 {
 	int	x;
 
 	x = 0;
-	draw_back(cub, &ray);
 	while (x < cub->mlx.win_size.x)
 	{
 		init_raydir(&ray, cub, x);

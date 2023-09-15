@@ -1,40 +1,12 @@
 #include "cub3d.h"
 
-static void	close_mlx(t_cub *cub, t_mlx mlx)
-{
-	if (mlx.img)
-		mlx_destroy_image(cub->mlx.mlx, mlx.img);
-	if (mlx.win)
-		mlx_destroy_window(cub->mlx.mlx, mlx.win);
-	if (mlx.mlx)
-	{
-		mlx_destroy_display(cub->mlx.mlx);
-		free(mlx.mlx);
-	}
-}
-
-void	ft_close(t_cub *cub)
+void	free_cub_params(t_cub *cub)
 {
 	int	i;
 	int	j;
 
 	j = 0;
 	i = 0;
-	if (cub->map)
-		free_map(cub->map);
-	close_mlx(cub, cub->north);
-	close_mlx(cub, cub->south);
-	close_mlx(cub, cub->east);
-	close_mlx(cub, cub->west);
-	close_mlx(cub, cub->door);
-	if (cub->press)
-		free(cub->press);
-	if (cub->ray)
-	{
-		free(cub->ray);
-		cub->ray = NULL;
-	}
-
 	if (cub->sprite)
 	{
 		while (j < SPRITE_COUNT)
@@ -53,6 +25,25 @@ void	ft_close(t_cub *cub)
 	}
 	if (cub->z_buf)
 		free(cub->z_buf);
+}
+
+void	ft_close(t_cub *cub)
+{
+	if (cub->map)
+		free_map(cub->map);
+	close_mlx(cub, cub->north);
+	close_mlx(cub, cub->south);
+	close_mlx(cub, cub->east);
+	close_mlx(cub, cub->west);
+	close_mlx(cub, cub->door);
+	if (cub->press)
+		free(cub->press);
+	if (cub->ray)
+	{
+		free(cub->ray);
+		cub->ray = NULL;
+	}
+	free_cub_params(cub);
 	mlx_do_key_autorepeaton(cub->mlx.mlx);
 	close_mlx(cub, cub->mlx);
 	if (cub)
@@ -60,58 +51,29 @@ void	ft_close(t_cub *cub)
 	exit(0);
 }
 
-void	clear_screen(t_cub *cub)
+void	do_move(int key, t_cub *cub)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	while (i < cub->mlx.win_size.y)
-	{
-		j = 0;
-		while (j < cub->mlx.win_size.x)
-		{
-			pixel_put(&(cub->mlx), j, i, 0);
-			++j;
-		}
-		++i;
-	}
-}
-
-int	ft_key_choose(int key, t_cub *cub)
-{
-	// printf("key : %d\n", key);
-	if (key == ESC)
-		ft_close(cub);
 	if (key == W || cub->press->w == 1)
 		cub->press->w = 1;
 	if (key == A || cub->press->a == 1)
 		cub->press->a = 1;
 	if (key == S || cub->press->s == 1)
-	{
 		cub->press->s = 1;
-		back(cub);
-	}
 	if (key == D || cub->press->d == 1)
-	{
 		cub->press->d = 1;
-		right(cub);
-	}
 	if (key == RL || cub->press->rl == 1)
-	{
 		cub->press->rl = 1;
-		rot_left(cub, 1.0);
-	}
 	if (key == RR || cub->press->rr == 1)
-	{
 		cub->press->rr = 1;
-		rot_right(cub, 1.0);
-	}
+}
+
+int	ft_key_choose(int key, t_cub *cub)
+{
+	if (key == ESC)
+		ft_close(cub);
+	do_move(key, cub);
 	if (key == SPC)
 		open_door(cub);
-	clear_screen(cub);
-	draw_cub(cub, cub->ray);
-	mlx_put_image_to_window(cub->mlx.mlx, cub->mlx.win, cub->mlx.img, 0, 0);
 	return (0);
 }
 
@@ -120,3 +82,13 @@ int	mouse_hook(t_cub *cub)
 	ft_close(cub);
 	return (0);
 }
+
+/*without bonus
+int	ft_key_choose(int key, t_cub *cub)
+{
+	if (key == ESC)
+		ft_close(cub);
+	do_move(key, cub);
+	return (0);
+}
+*/

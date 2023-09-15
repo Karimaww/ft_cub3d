@@ -1,12 +1,17 @@
 #include "cub3d.h"
 
+/**
+ * @brief Get the size sprite object
+ * h/w : height/width of the sprite
+ * draw_start : calculate lowest and highest pixel to fill in current stripe
+ * @param cub 
+ * @param sprite 
+ */
 void	get_size_sprite(t_cub **cub, t_sprite *sprite)
 {
-	//calculate height of the sprite on screen
-	sprite->h = abs((int)(((*cub)->mlx.win_size.y
-				/ sprite->transform.y))) / VDIV;
-	//calculate lowest and highest pixel to fill in current stripe
-	sprite->draw_start.y = - sprite->h / 2
+	sprite->h = abs((int)(((*cub)->mlx.win_size.y / sprite->transform.y)))
+		/ VDIV;
+	sprite->draw_start.y = -sprite->h / 2
 		+ (*cub)->mlx.win_size.y / 2
 		+ sprite->v_move;
 	if (sprite->draw_start.y < 0)
@@ -16,8 +21,6 @@ void	get_size_sprite(t_cub **cub, t_sprite *sprite)
 		+ sprite->v_move;
 	if (sprite->draw_end.y >= (*cub)->mlx.win_size.y)
 		sprite->draw_end.y = (*cub)->mlx.win_size.y - 1;
-
-	//calculate width of the sprite
 	sprite->w = abs((int)(((*cub)->mlx.win_size.y
 					/ sprite->transform.y))) / UDIV;
 	sprite->draw_start.x = -sprite->w / 2
@@ -30,57 +33,53 @@ void	get_size_sprite(t_cub **cub, t_sprite *sprite)
 		sprite->draw_end.x = (*cub)->mlx.win_size.x - 1;
 }
 
-void	draw_obj(t_cub **cub, t_sprite *sprite)
+/**
+ * @brief y_d is a variable for the norme, otherwise y_d.x = d and y_d.y = y
+ * st : stripe
+ * sp : sprite
+ * @param cub 
+ * @param sprite 
+ */
+static void	draw_obj(t_cub **cub, t_sprite *sp)
 {
-	int		stripe;
-	int		y;
 	t_vec2	tex;
 	int		d;
-	int		i;
+	t_vec2	val;
 
-	i = 0;
-	stripe = sprite->draw_start.x;
-	while (stripe < sprite->draw_end.x)
+	val.x = sp->draw_start.x;
+	while (val.x < sp->draw_end.x)
 	{
-		tex.x = (int)(256 * (stripe - (-sprite->w / 2
-						+ sprite->screen_x))
-				* sprite->text[sprite->text_id].win_size.x
-				/ sprite->w) / 256;
-		y = sprite->draw_start.y;
-		if (sprite->transform.y > 0 && stripe > 0
-			&& stripe < (*cub)->mlx.win_size.x
-			&& sprite->transform.y < (*cub)->z_buf[stripe])
+		tex.x = (int)(256 * (val.x - (-sp->w / 2 + sp->screen_x))
+				* sp->text[sp->text_id].win_size.x / sp->w) / 256;
+		val.y = sp->draw_start.y;
+		if (sp->transform.y > 0 && val.x > 0 && val.x < (*cub)->mlx.win_size.x
+			&& sp->transform.y < (*cub)->z_buf[val.x])
 		{
-			while (y < sprite->draw_end.y)
+			while (val.y < sp->draw_end.y)
 			{
-				d = (y - sprite->v_move) * 256
-					- (*cub)->mlx.win_size.y * 128
-					+ sprite->h * 128;
-				tex.y = ((d * sprite->text[sprite->text_id].win_size.y)
-						/ sprite->h / 256);
-				texture_on_img(&(sprite->text[sprite->text_id]), cub, stripe,
-					y, tex.x, tex.y);
-				y++;
+				d = (val.y - sp->v_move) * 256
+					- (*cub)->mlx.win_size.y * 128 + sp->h * 128;
+				tex.y = ((d * sp->text[sp->text_id].win_size.y)
+						/ sp->h / 256);
+				texture_on_img(&(sp->text[sp->text_id]), cub, tex, val);
+				(val.y)++;
 			}
 		}
-		stripe++;
+		(val.x)++;
 	}
 }
 
 void	draw_sprite(t_cub **cub, t_ray *ray, t_sprite *sprite)
 {
-	//translate sprite position to relative to camera
 	sprite->pos.x = (int)(sprite->initial_pos.x) + 0.25;
 	sprite->pos.y = (int)(sprite->initial_pos.y) + 0.25;
 	sprite->pos.x -= ray->pos.x;
 	sprite->pos.y -= ray->pos.y;
-
 	sprite->inv_det = 1.0 / (ray->plane.x * ray->dir.y
 			- ray->plane.y * ray->dir.x);
 	sprite->transform.x = sprite->inv_det
 		* (ray->dir.y * sprite->pos.x
 			- ray->dir.x * sprite->pos.y);
-	//this is actually the depth inside the screen, that what Z is in 3D
 	sprite->transform.y = sprite->inv_det
 		* (-ray->plane.y * sprite->pos.x
 			+ ray->plane.x * sprite->pos.y);

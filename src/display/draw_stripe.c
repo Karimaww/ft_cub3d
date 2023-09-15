@@ -1,23 +1,36 @@
 #include "cub3d.h"
 
-void	texture_on_img(t_mlx *texture, t_cub **cub,
-	int x, int y, int tex_x, int tex_y)
+void	texture_on_img(t_mlx *texture, t_cub **cub, t_vec2 tex, t_vec2 val)
 {
 	int	r;
 	int	g;
 	int	b;
 
-	if (!((tex_y >= 0 && tex_y < texture->win_size.y
-				&& tex_x >= 0 && tex_x < texture->win_size.x)))
+	if (!((tex.y >= 0 && tex.y < texture->win_size.y
+				&& tex.x >= 0 && tex.x < texture->win_size.x)))
 		return ;
-	r = texture->addr[(int)(tex_y * texture->linel + (double)tex_x * ((double)texture->bpp / 8))]; 
-	g = texture->addr[(int)(tex_y * texture->linel + (double)tex_x * ((double)texture->bpp / 8) + 1)];
-	b = texture->addr[(int)(tex_y * texture->linel + (double)tex_x * ((double)texture->bpp / 8) + 2)];
+	r = texture->addr[(int)(tex.y * texture->linel
+			+ (double)tex.x * ((double)texture->bpp / 8))];
+	g = texture->addr[(int)(tex.y * texture->linel
+			+ (double)tex.x * ((double)texture->bpp / 8) + 1)];
+	b = texture->addr[(int)(tex.y * texture->linel
+			+ (double)tex.x * ((double)texture->bpp / 8) + 2)];
 	if (r == 0 && g == 0 && b == 0)
 		return ;
-	(*cub)->mlx.addr[y * (*cub)->mlx.linel + x * (*cub)->mlx.bpp / 8] = r;
-	(*cub)->mlx.addr[y * (*cub)->mlx.linel + x * ((*cub)->mlx.bpp / 8) + 1] = g;
-	(*cub)->mlx.addr[y * (*cub)->mlx.linel + x * ((*cub)->mlx.bpp / 8) + 2] = b;
+	(*cub)->mlx.addr[val.y * (*cub)->mlx.linel + val.x
+		* (*cub)->mlx.bpp / 8] = r;
+	(*cub)->mlx.addr[val.y * (*cub)->mlx.linel + val.x * ((*cub)->mlx.bpp / 8)
+		+ 1] = g;
+	(*cub)->mlx.addr[val.y * (*cub)->mlx.linel + val.x * ((*cub)->mlx.bpp / 8)
+		+ 2] = b;
+}
+
+static void	get_wall_x(double *wall_x, t_ray **ray)
+{
+	if ((*ray)->side == 0)
+		*wall_x = (*ray)->pos.y + (*ray)->perp_dist * (*ray)->ray_dir.y;
+	else
+		*wall_x = (*ray)->pos.x + (*ray)->perp_dist * (*ray)->ray_dir.x;
 }
 
 /**
@@ -32,32 +45,30 @@ void	texture_on_img(t_mlx *texture, t_cub **cub,
  */
 void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x)
 {
-	double	wall_x;
-	int		tex_x;
-	double	step;
-	double	tex_pos;
-	int		y;
+	t_vec2		val;
+	t_vec2		tex;
+	double		wall_x;
+	double		step;
+	double		tex_pos;
 
-	if ((*ray)->side == 0)
-		wall_x = (*ray)->pos.y + (*ray)->perp_dist * (*ray)->ray_dir.y;
-	else
-		wall_x = (*ray)->pos.x + (*ray)->perp_dist * (*ray)->ray_dir.x;
+	val.x = x;
+	get_wall_x(&wall_x, ray);
 	wall_x -= floor(wall_x);
-	tex_x = (int)(wall_x * (double)(side.win_size.x));
+	tex.x = (int)(wall_x * (double)(side.win_size.x));
 	if ((*ray)->side == 0 && (*ray)->ray_dir.x > 0)
-		tex_x = side.win_size.x - tex_x - 1;
+		tex.x = side.win_size.x - tex.x - 1;
 	if ((*ray)->side == 1 && (*ray)->ray_dir.y < 0)
-		tex_x = side.win_size.x - tex_x - 1;
+		tex.x = side.win_size.x - tex.x - 1;
 	step = 1.0 * side.win_size.y / (*ray)->line_h;
 	tex_pos = ((*ray)->draw_start - cub->mlx.win_size.y / 2
 			+ (*ray)->line_h / 2) * step;
-	y = (*ray)->draw_start;
-	while (y < (*ray)->draw_end)
+	val.y = (*ray)->draw_start;
+	while (val.y < (*ray)->draw_end)
 	{
 		tex_pos += step;
-		texture_on_img(&side, &cub, x, y, tex_x,
-			(int)tex_pos & (side.win_size.y - 1));
-		y++;
+		tex.y = (int)tex_pos & (side.win_size.y - 1);
+		texture_on_img(&side, &cub, tex, val);
+		(val.y)++;
 	}
 }
 

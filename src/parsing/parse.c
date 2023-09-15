@@ -24,30 +24,7 @@ char	**create_map(t_lst *lst, t_vec2 *map_size)
 		tmp = tmp->next;
 	}
 	map[i] = NULL;
-	if (map_size->x == 0 || map_size->x == 1
-		|| !space_extension(map, map_size->x))
-		return (printf("Error: Invalid map.\n"), NULL);
-	if (check_isolation(map, map_size->y) == EXIT_FAILURE)
-		return (printf("Error: Map is not closed.\n"), free_tab(map), NULL);
-	return (map);
-}
-
-int	is_line_for_map(char *line)
-{
-	int	i;
-
-	i = 0;
-	if (empty_line(line))
-		return (printf("Error : Line for map is empty\n"), EXIT_FAILURE);
-	while (line[i] && line[i] != '\n')
-	{
-		if (line[i] != '0' && line[i] != '1' && line[i] != '2'
-			&& line[i] != 'N' && line[i] != 'S' && line[i] != 'E'
-			&& line[i] != 'W' && line[i] != ' ')
-			return (printf("Error : invalid character in map\n"), EXIT_FAILURE);
-		i++;
-	}
-	return (EXIT_SUCCESS);
+	return (check_map(map, map_size));
 }
 
 int	get_map(t_map **map, char *line, int fd)
@@ -94,6 +71,22 @@ t_map	*init_map(void)
 	return (map);
 }
 
+t_map	*parse_map(t_map *map, int fd, char *line)
+{
+	if (empty_params(map))
+	{
+		if (line)
+			free(line);
+		return (printf("Error: Missing params.\n"), free_map(map),
+			close(fd), NULL);
+	}
+	if (get_map(&map, ignore_empty_lines(line, fd), fd) == EXIT_FAILURE)
+		return (close(fd), free_map(map), NULL);
+	if (check_player(map) == EXIT_FAILURE)
+		return (free_map(map), close(fd), NULL);
+	return (close(fd), map);
+}
+
 t_map	*parse(char *path)
 {
 	char	*line;
@@ -116,16 +109,5 @@ t_map	*parse(char *path)
 		free(line);
 		line = get_next_line(fd);
 	}
-	if (empty_params(map))
-	{
-		if (line)
-			free(line);
-		return (printf("Error: Missing params.\n"), free_map(map),
-			close(fd), NULL);
-	}
-	if (get_map(&map, ignore_empty_lines(line, fd), fd) == EXIT_FAILURE)
-		return (close(fd), free_map(map), NULL);
-	if (check_player(map) == EXIT_FAILURE)
-		return (free_map(map), close(fd), NULL);
-	return (close(fd), map);
+	return (parse_map(map, fd, line));
 }

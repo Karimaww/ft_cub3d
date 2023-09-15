@@ -68,4 +68,3 @@ int	free_map(t_map *map)
 	}
 	return (EXIT_SUCCESS);
 }
-

@@ -1,4 +1,4 @@
-# the bonus will be in src/bonus parsing/bonus etc...
+# the bonus will be in src/bonus etc...
 CC			= cc
 NAME		= cub3d
 UNAME 		:= $(shell uname)
@@ -21,7 +21,11 @@ SOURCES_DISPLAY		=	draw_back.c		\
 						init_sprite.c 	\
 						init_textures.c	\
 						move.c			\
+						pos_sprite.c	\
 						rotate.c		\
+						handle.c		\
+						draw_map.c		\
+						game_loop.c		\
 						#$(SOURCES_DISPLAY_BONUS)
 
 SOURCES_PARSING 	=	parse.c			\
@@ -32,6 +36,7 @@ SOURCES_PARSING 	=	parse.c			\
 SOURCES_UTILS 		=	lst_utils.c		\
 						map_utils.c		\
 						map_check.c		\
+						map_check2.c	\
 						mlx_actions.c	\
 						mlx_utils.c		\
 						#$(SOURCES_UTILS_BONUS)

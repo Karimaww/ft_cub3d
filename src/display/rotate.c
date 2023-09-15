@@ -1,5 +1,14 @@
 #include "cub3d.h"
 
+int	verif_boundries(t_cub *cub, int x, int y)
+{
+	if (x < 0 || y < 0
+		|| x >= cub->map->map_size.x
+		|| y >= cub->map->map_size.y)
+		return (0);
+	return (1);
+}
+
 int	check_move(double val, double start, double end)
 {
 	return (val >= start && val < end);

@@ -31,4 +31,3 @@ void	init_rot(t_cub *cub)
 	else if (cub->map->map[y][x] == 'W')
 		rot_angle(cub, PI);
 }
-

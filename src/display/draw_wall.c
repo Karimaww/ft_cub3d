@@ -1,16 +1,21 @@
 #include "cub3d.h"
 
+/**
+ * @brief ray_dir : calculate ray position and direction
+ * camera_x : x-coordinate in camera space
+ * map : which box of the map we're in
+ * delta_dist : length of ray from one x or y-side to next x or y-side
+ * @param ray 
+ * @param cub 
+ * @param x 
+ */
 void	init_raydir(t_ray **ray, t_cub *cub, int x)
 {
-	//calculate ray position and direction
-	(*ray)->camera_x = 2 * x / (double)(cub->mlx.win_size.x) - 1; //x-coordinate in camera space
+	(*ray)->camera_x = 2 * x / (double)(cub->mlx.win_size.x) - 1;
 	(*ray)->ray_dir.x = (*ray)->dir.x + (*ray)->plane.x * (*ray)->camera_x;
 	(*ray)->ray_dir.y = (*ray)->dir.y + (*ray)->plane.y * (*ray)->camera_x;
-	//which box of the map we're in
 	(*ray)->map.x = (int)((*ray)->pos.x);
 	(*ray)->map.y = (int)((*ray)->pos.y);
-
-	//length of ray from one x or y-side to next x or y-side
 	if ((*ray)->ray_dir.x == 0)
 		(*ray)->delta_dist.x = 1e30;
 	if ((*ray)->ray_dir.y == 0)
@@ -61,12 +66,9 @@ void	init_side_dist(t_ray **ray)
  */
 void	dda_algo(t_ray **ray, t_cub *cub)
 {
-	//was there a wall hit?
 	(*ray)->hit = 0;
-	//perform DDA
 	while ((*ray)->hit == 0)
 	{
-		//jump to next map square, either in x-direction, or in y-direction
 		if ((*ray)->side_dist.x < (*ray)->side_dist.y)
 		{
 			(*ray)->side_dist.x += (*ray)->delta_dist.x;
@@ -79,7 +81,6 @@ void	dda_algo(t_ray **ray, t_cub *cub)
 			(*ray)->map.y += (*ray)->step.y;
 			(*ray)->side = 1;
 		}
-		//Check if ray has hit a wall
 		if (cub->map->map[(*ray)->map.y][(*ray)->map.x] == '1'
 			|| cub->map->map[(*ray)->map.y][(*ray)->map.x] == '2')
 			(*ray)->hit = 1;
@@ -101,16 +102,22 @@ int	get_color(t_ray **ray, t_cub *cub)
 	return (color);
 }
 
+/**
+ * @brief side : calculate distance projected on camera direction
+ * (Euclidean distance would give fisheye effect!)
+ * line_h : calculate height of line to draw on screen
+ * draw_start : calculate lowest and highest pixel to fill in current stripe
+ * @param ray 
+ * @param cub 
+ * @param x 
+ */
 void	show_line(t_ray **ray, t_cub *cub, int x)
 {
-	//Calculate distance projected on camera direction (Euclidean distance would give fisheye effect!)
 	if ((*ray)->side == 0)
 		(*ray)->perp_dist = ((*ray)->side_dist.x - (*ray)->delta_dist.x);
 	else
 		(*ray)->perp_dist = ((*ray)->side_dist.y - (*ray)->delta_dist.y);
-	//Calculate height of line to draw on screen
 	(*ray)->line_h = (int)(cub->mlx.win_size.y / (*ray)->perp_dist);
-	//calculate lowest and highest pixel to fill in current stripe
 	(*ray)->draw_start = -(*ray)->line_h / 2 + cub->mlx.win_size.y / 2;
 	if ((*ray)->draw_start < 0)
 		(*ray)->draw_start = 0;

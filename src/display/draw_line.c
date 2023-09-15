@@ -1,5 +1,11 @@
 #include "cub3d.h"
 
+/**
+ * @brief These functions were taken from the previous project FdF and are
+ * going to draw the lines of the triangle. They use the Bresenham algorithm.
+ * @param d 
+ * @return int 
+ */
 static int	set_i_d(int *d)
 {
 	if (*d < 0)

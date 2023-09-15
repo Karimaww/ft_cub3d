@@ -37,6 +37,11 @@
 # define UDIV 5
 # define VDIV 5
 # define SPRITE_COUNT 4
+# define MAP_X_OFFSET 10
+# define MAP_Y_OFFSET 10
+# define MAP_SCALE 10
+# define MAP_SIZE_X 17
+# define MAP_SIZE_Y 11
 
 #ifdef __linux__
 # define ESC 65307
@@ -203,6 +208,10 @@ typedef struct s_cub
 t_map	*parse(char *path);
 int		get_param(t_map **map, char *line);
 int		check_player(t_map *map);
+char	**check_map(char **map, t_vec2 *map_size);
+int		is_line_for_map(char *line);
+void	find_dir(t_map **map, char *line, int *res, int i);
+int		put_dir(char **dir, char *line);
 
 /*---lst_utils---*/
 int		lst_add_back(t_lst **lst, char *tab);
@@ -234,14 +243,27 @@ void	pixel_put(t_mlx *data, int x, int y, int color);
 void	draw_line(t_cub *cub, t_vec2 p1, t_vec2 p2);
 
 int		draw_cub(t_cub *cub, t_ray *ray);
-int		init_ray(t_ray **ray, t_cub *cub);
 t_cub	*init_cub(t_map *map);
 int		init_textures(t_cub **cub);
 
+/*----key press utils----*/
+int		init_press(t_cub **cub);
+int		change_flag_0(int key, t_cub *cub);
+
+/*----sprite utils----*/
 int		init_sprite(t_cub **cub);
 void	draw_sprite(t_cub **cub, t_ray *ray, t_sprite *sprite);
-void	texture_on_img(t_mlx *texture, t_cub **cub,
-			int x, int y, int tex_x, int tex_y);
+void	texture_on_img(t_mlx *texture, t_cub **cub, t_vec2 tex, t_vec2 val);
+void	find_position(t_cub *cub, t_sprite *sprite, int v);
+int		iter_dir(t_cub **cub, t_sprite *sprite, char *dir_name);
+int		init_sprite_text(t_cub **cub, t_sprite *sprite,
+					char *dir_name, char **file_names);
+
+/*----mouse utils----*/
+int		handle_mouse(int x, int y, t_cub *cub);
+
+/*----game loop----*/
+int		update_game(t_cub *cub);
 
 /*-----wall------*/
 void	init_raydir(t_ray **ray, t_cub *cub, int x);
@@ -271,4 +293,6 @@ int		verif_boundries(t_cub *cub, int x, int y);
 void	draw_square(t_cub *cub, int x, int y, int color);
 void	draw_line(t_cub *cub, t_vec2 v1, t_vec2 v2);
 
+/*------mlx------*/
+void	close_mlx(t_cub *cub, t_mlx mlx);
 #endif

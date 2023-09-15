@@ -94,18 +94,7 @@ int	get_param(t_map **map, char *line)
 	while (line[i] && line[i] != '\n')
 	{
 		res = -1;
-		if (!ft_strncmp(line + i, "NO", 2) && line[i + 2] == ' ')
-			res = put_dir(&((*map)->no), line + i + 2);
-		else if (!ft_strncmp(line + i, "SO", 2) && line[i + 2] == ' ')
-			res = put_dir(&((*map)->so), line + i + 2);
-		else if (!ft_strncmp(line + i, "WE", 2) && line[i + 2] == ' ')
-			res = put_dir(&((*map)->we), line + i + 2);
-		else if (!ft_strncmp(line + i, "EA", 2) && line[i + 2] == ' ')
-			res = put_dir(&((*map)->ea), line + i + 2);
-		else if (!ft_strncmp(line + i, "F", 1) && line[i + 1] == ' ')
-			res = put_color(&((*map)->f), line + i + 1);
-		else if (!ft_strncmp(line + i, "C", 1) && line[i + 1] == ' ')
-			res = put_color(&((*map)->c), line + i + 1);
+		find_dir(map, line, &res, i);
 		if (res == EXIT_SUCCESS)
 			return (EXIT_SUCCESS);
 		if (line[i] != ' ' || res == EXIT_FAILURE)

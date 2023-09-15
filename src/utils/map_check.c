@@ -1,16 +1,5 @@
 #include "cub3d.h"
 
-int	empty_params(t_map *map)
-{
-	if (!map->no || !map->so || !map->we || !map->ea)
-		return (1);
-	if (map->f.r == -1 || map->f.g == -1 || map->f.b == -1)
-		return (1);
-	if (map->c.r == -1 || map->c.g == -1 || map->c.b == -1)
-		return (1);
-	return (0);
-}
-
 int	check_colors(char **rgb, t_color *color)
 {
 	int	i;
