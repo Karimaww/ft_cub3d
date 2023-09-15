@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_params.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 21:16:33 by ksadykov          #+#    #+#             */
+/*   Updated: 2023/09/15 21:16:33 by ksadykov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 char	*repeat_char(char c, int n)
@@ -47,16 +59,17 @@ int	put_dir(char **dir, char *line)
 	i = 0;
 	len = 0;
 	if (*dir)
-		return (printf("Error: Double declaration.\n"), EXIT_FAILURE);
+		return (printf("Error\nDouble declaration of map parameter.\n"),
+			EXIT_FAILURE);
 	while (line[i] == ' ')
 		i++;
 	while (line[i + len] && line[i + len] != ' ' && line[i + len] != '\n')
 		len++;
 	if (len == 0)
-		return (printf("Error: No file to use.\n"), EXIT_FAILURE);
+		return (printf("Error\nNo file to use.\n"), EXIT_FAILURE);
 	*dir = ft_substr(line, i, len);
 	if (access(*dir, F_OK) == -1)
-		return (printf("Error: File does not exist.\n"), EXIT_FAILURE);
+		return (printf("Error\nFile does not exist.\n"), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -70,13 +83,14 @@ int	put_color(t_color *color, char *line)
 	i = 0;
 	len = 0;
 	if (color->r != -1 || color->g != -1 || color->b != -1)
-		return (printf("Error: Double declaration.\n"), EXIT_FAILURE);
+		return (printf("Error\nDouble declaration of map parameter.\n"),
+			EXIT_FAILURE);
 	while (line[i] == ' ')
 		i++;
 	while (line[i + len] && line[i + len] != ' ' && line[i + len] != '\n')
 		len++;
 	if (len == 0)
-		return (printf("Error: No color is given.\n"), EXIT_FAILURE);
+		return (printf("Error\nNo color is given.\n"), EXIT_FAILURE);
 	subline = ft_substr(line, i, len);
 	rgb = ft_split(subline, ',');
 	if (!rgb || check_colors(rgb, color) == EXIT_FAILURE)
@@ -95,10 +109,11 @@ int	get_param(t_map **map, char *line)
 	{
 		res = -1;
 		find_dir(map, line, &res, i);
-		if (res == EXIT_SUCCESS)
-			return (EXIT_SUCCESS);
-		if (line[i] != ' ' || res == EXIT_FAILURE)
-			return (printf("Error: Bad params.\n"), EXIT_FAILURE);
+		if (res == EXIT_SUCCESS || res == EXIT_FAILURE)
+			return (res);
+		if (line[i] != ' ')
+			return (printf("Error\nInvalid map parameter.\n"),
+				EXIT_FAILURE);
 		i++;
 	}
 	return (EXIT_SUCCESS);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_cub.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 21:16:20 by ksadykov          #+#    #+#             */
+/*   Updated: 2023/09/15 21:16:20 by ksadykov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 static int	init_mlx(t_cub **cub)
@@ -33,7 +45,7 @@ static int	init_ray(t_ray **ray, t_cub *cub)
 {
 	*ray = malloc(sizeof(t_ray));
 	if (!*ray)
-		return (printf("Error : Malloc of t_ray.n"), EXIT_FAILURE);
+		return (printf("Error\nMalloc of t_ray.\n"), EXIT_FAILURE);
 	cub->ray = *ray;
 	(*ray)->pos.x = cub->map->player.x + 0.5;
 	(*ray)->pos.y = cub->map->player.y + 0.5;
@@ -53,13 +65,6 @@ static int	init_cub_first(t_cub **c, t_map *map)
 	cub = *c;
 	cub->mlx.win_size.x = 1200;
 	cub->mlx.win_size.y = 800;
-	cub->square_size = 10;
-	cub->z_buf = malloc(sizeof(double) * cub->mlx.win_size.x);
-	if (!cub->z_buf)
-		return (EXIT_FAILURE);
-	ft_bzero(cub->z_buf, cub->mlx.win_size.x);
-	cub->frame_counter = 0;
-	cub->sprite = NULL;
 	cub->map = map;
 	return (EXIT_SUCCESS);
 }
@@ -87,33 +92,6 @@ t_cub	*init_cub(t_map *map)
 	if (init_mlx(&cub) == EXIT_FAILURE)
 		return (ft_close(cub), NULL);
 	mlx_do_key_autorepeatoff(cub->mlx.mlx);
-	if (init_textures(&cub) == EXIT_FAILURE || init_ray(&ray, cub) == 1
-		|| init_sprite(&cub) == EXIT_FAILURE)
-		return (ft_close(cub), NULL);
-	mlx_hook(cub->mlx.win, DestroyNotify, KeyPressMask, mouse_hook, cub);
-	mlx_hook(cub->mlx.win, KeyPress, KeyPressMask, ft_key_choose, cub);
-	mlx_hook(cub->mlx.win, KeyRelease, KeyReleaseMask, change_flag_0, cub);
-	mlx_hook(cub->mlx.win, MotionNotify, PointerMotionMask, handle_mouse, cub);
-	mlx_loop_hook(cub->mlx.mlx, &update_game, cub);
-	return (cub);
-}
-
-/* WITHOUT BONUS
-t_cub	*init_cub(t_map *map)
-{
-	t_cub	*cub;
-	t_ray	*ray;
-
-	cub = (t_cub *)malloc(sizeof(t_cub));
-	if (!cub)
-		return (NULL);
-	if (init_cub_first(&cub, map) == EXIT_FAILURE || init_press(&cub) == 1)
-		return (ft_close(cub), NULL);
-	ray = NULL;
-	cub->ray = ray;
-	if (init_mlx(&cub) == EXIT_FAILURE)
-		return (ft_close(cub), NULL);
-	mlx_do_key_autorepeatoff(cub->mlx.mlx);
 	if (init_textures(&cub) == EXIT_FAILURE || init_ray(&ray, cub) == 1)
 		return (ft_close(cub), NULL);
 	mlx_hook(cub->mlx.win, DestroyNotify, KeyPressMask, mouse_hook, cub);
@@ -122,4 +100,3 @@ t_cub	*init_cub(t_map *map)
 	mlx_loop_hook(cub->mlx.mlx, &update_game, cub);
 	return (cub);
 }
-*/

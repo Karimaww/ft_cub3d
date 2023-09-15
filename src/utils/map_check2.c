@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_check2.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 21:16:45 by ksadykov          #+#    #+#             */
+/*   Updated: 2023/09/15 21:16:45 by ksadykov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int	empty_params(t_map *map)
@@ -17,7 +29,7 @@ char	**check_map(char **map, t_vec2 *map_size)
 		|| !space_extension(map, map_size->x))
 		return (printf("Error: Invalid map.\n"), NULL);
 	if (check_isolation(map, map_size->y) == EXIT_FAILURE)
-		return (printf("Error: Map is not closed.\n"), free_tab(map), NULL);
+		return (free_tab(map), NULL);
 	return (map);
 }
 
@@ -27,13 +39,13 @@ int	is_line_for_map(char *line)
 
 	i = 0;
 	if (empty_line(line))
-		return (printf("Error : Line for map is empty\n"), EXIT_FAILURE);
+		return (printf("Error\nLine for map is empty.\n"), EXIT_FAILURE);
 	while (line[i] && line[i] != '\n')
 	{
-		if (line[i] != '0' && line[i] != '1' && line[i] != '2'
+		if (line[i] != '0' && line[i] != '1'
 			&& line[i] != 'N' && line[i] != 'S' && line[i] != 'E'
 			&& line[i] != 'W' && line[i] != ' ')
-			return (printf("Error : invalid character in map\n"), EXIT_FAILURE);
+			return (printf("Error\nInvalid character in map.\n"), EXIT_FAILURE);
 		i++;
 	}
 	return (EXIT_SUCCESS);

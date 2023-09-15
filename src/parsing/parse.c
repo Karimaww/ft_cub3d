@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 21:16:38 by ksadykov          #+#    #+#             */
+/*   Updated: 2023/09/15 21:16:38 by ksadykov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 char	**create_map(t_lst *lst, t_vec2 *map_size)
@@ -12,14 +24,14 @@ char	**create_map(t_lst *lst, t_vec2 *map_size)
 	map_size->x = 0;
 	map = malloc(sizeof(char *) * (map_size->y + 1));
 	if (!map)
-		return (printf("Error: Malloc error for map.\n"), NULL);
+		return (printf("Error\nMalloc error for map.\n"), NULL);
 	while (tmp)
 	{
 		if (map_size->x < tmp->size)
 			map_size->x = tmp->size;
 		map[i] = ft_strdup(tmp->tab);
 		if (!map[i])
-			return (printf("Error: Strdup failed.\n"), free_tab(map), NULL);
+			return (printf("Error\nStrdup failed.\n"), free_tab(map), NULL);
 		i++;
 		tmp = tmp->next;
 	}
@@ -32,7 +44,7 @@ int	get_map(t_map **map, char *line, int fd)
 	t_lst	*lst;
 
 	if (!line)
-		return (printf("Error: No map.\n"), EXIT_FAILURE);
+		return (printf("Error\nNo map.\n"), EXIT_FAILURE);
 	lst = NULL;
 	while (line)
 	{
@@ -45,9 +57,9 @@ int	get_map(t_map **map, char *line, int fd)
 	if (line)
 		free(line);
 	if (!lst)
-		return (printf("Error: No map.\n"), free(line), EXIT_FAILURE);
+		return (printf("Error\nNo map.\n"), free(line), EXIT_FAILURE);
 	if (lst_size(lst) <= 1)
-		return (printf("Error: Invalid map.\n"), EXIT_FAILURE);
+		return (printf("Error\nInvalid map.\n"), EXIT_FAILURE);
 	(*map)->map = create_map(lst, &((*map)->map_size));
 	if (!(*map)->map)
 		return (free(line), free_lst(&lst), EXIT_FAILURE);
@@ -60,7 +72,7 @@ t_map	*init_map(void)
 
 	map = malloc(sizeof(t_map));
 	if (!map)
-		return (printf("Error: Malloc error for map.\n"), NULL);
+		return (printf("Error\nMalloc error for map.\n"), NULL);
 	map->no = NULL;
 	map->so = NULL;
 	map->we = NULL;
@@ -77,7 +89,7 @@ t_map	*parse_map(t_map *map, int fd, char *line)
 	{
 		if (line)
 			free(line);
-		return (printf("Error: Missing params.\n"), free_map(map),
+		return (printf("Error\nMissing params.\n"), free_map(map),
 			close(fd), NULL);
 	}
 	if (get_map(&map, ignore_empty_lines(line, fd), fd) == EXIT_FAILURE)
@@ -95,13 +107,15 @@ t_map	*parse(char *path)
 
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
-		return (NULL);
+		return (printf("Error\nAn error occurred while opening the file :(\n"),
+			NULL);
 	map = init_map();
 	if (!map)
 		return (close(fd), NULL);
 	line = get_next_line(fd);
 	if (!line)
-		return (close(fd), free_map(map), NULL);
+		return (printf("Error\nFile is probably empty: fill it up loser :)\n"),
+			close(fd), free_map(map), NULL);
 	while (line && empty_params(map))
 	{
 		if (get_param(&map, line) == EXIT_FAILURE)

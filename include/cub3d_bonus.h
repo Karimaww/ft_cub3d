@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 21:15:28 by ksadykov          #+#    #+#             */
-/*   Updated: 2023/09/15 21:15:28 by ksadykov         ###   ########.fr       */
+/*   Created: 2023/09/15 21:14:10 by ksadykov          #+#    #+#             */
+/*   Updated: 2023/09/15 21:15:21 by ksadykov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef CUB3D_BONUS_H
+# define CUB3D_BONUS_H
 # include "../libft/libft.h"
 # include <stdlib.h>
 # include <stdio.h>
@@ -22,6 +22,10 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include "mlx_int.h"
+# include <dirent.h>
+# include <string.h>
+# include <sys/time.h>
+# include <time.h>
 
 # define RGB_RED 0xFFA07A
 # define RGB_BLACK 0x000000
@@ -44,6 +48,12 @@
 # define VMOVE 0.0
 # define UDIV 5
 # define VDIV 5
+# define SPRITE_COUNT 4
+# define MAP_X_OFFSET 10
+# define MAP_Y_OFFSET 10
+# define MAP_SCALE 10
+# define MAP_SIZE_X 17
+# define MAP_SIZE_Y 11
 
 # ifdef __linux__
 
@@ -172,6 +182,25 @@ typedef struct s_press
 	int		rr;
 }			t_press;
 
+typedef struct s_sprite
+{
+	t_mlx		*text;
+	t_vec2		draw_start;
+	t_vec2		draw_end;
+	t_vec2d		pos;
+	t_vec2d		initial_pos;
+	t_vec2d		transform;
+	double		inv_det;
+	int			v_move;
+	int			screen_x;
+	int			h;
+	int			w;
+	int			text_count;
+	int			text_id;
+	int			current_frame;
+	double		dist;
+}				t_sprite;
+
 typedef struct s_cub
 {
 	t_press		*press;
@@ -181,7 +210,12 @@ typedef struct s_cub
 	t_mlx		south;
 	t_mlx		west;
 	t_mlx		east;
+	t_mlx		door;
+	t_sprite	*sprite;
+	double		*z_buf;
 	t_ray		*ray;
+	int			square_size;
+	int			frame_counter;
 }			t_cub;
 
 /*----parsing----*/
@@ -220,6 +254,7 @@ int		mouse_hook(t_cub *cub);
 void	clear_screen(t_cub *cub);
 void	ft_close(t_cub *cub);
 void	pixel_put(t_mlx *data, int x, int y, int color);
+void	draw_line(t_cub *cub, t_vec2 p1, t_vec2 p2);
 
 int		draw_cub(t_cub *cub, t_ray *ray);
 t_cub	*init_cub(t_map *map);
@@ -230,7 +265,16 @@ int		init_press(t_cub **cub);
 int		change_flag_0(int key, t_cub *cub);
 
 /*----sprite utils----*/
+int		init_sprite(t_cub **cub);
+void	draw_sprite(t_cub **cub, t_ray *ray, t_sprite *sprite);
 void	texture_on_img(t_mlx *texture, t_cub **cub, t_vec2 tex, t_vec2 val);
+void	find_position(t_cub *cub, t_sprite *sprite, int v);
+int		iter_dir(t_cub **cub, t_sprite *sprite, char *dir_name);
+int		init_sprite_text(t_cub **cub, t_sprite *sprite,
+			char *dir_name, char **file_names);
+
+/*----mouse utils----*/
+int		handle_mouse(int x, int y, t_cub *cub);
 
 /*----game loop----*/
 int		update_game(t_cub *cub);
@@ -244,6 +288,7 @@ void	show_line(t_ray **ray, t_cub *cub, int x);
 
 void	draw_back(t_cub *cub, t_ray **ray);
 void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x);
+int		draw_door(t_ray *ray, t_cub *cub);
 void	draw_stripe(t_ray **ray, t_cub *cub, int x);
 
 /*----hooks----*/
@@ -257,6 +302,11 @@ void	rot_left(t_cub *cub, double speed);
 void	rot_right(t_cub *cub, double speed);
 void	open_door(t_cub *cub);
 int		verif_boundries(t_cub *cub, int x, int y);
+
+/*----minimap----*/
+void	draw_square(t_cub *cub, int x, int y, int color);
+void	draw_line(t_cub *cub, t_vec2 v1, t_vec2 v2);
+void	draw_minimap(t_cub *cub);
 
 /*------mlx------*/
 void	close_mlx(t_cub *cub, t_mlx mlx);

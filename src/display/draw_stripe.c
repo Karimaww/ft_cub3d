@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_stripe.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 21:16:11 by ksadykov          #+#    #+#             */
+/*   Updated: 2023/09/15 21:16:11 by ksadykov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	texture_on_img(t_mlx *texture, t_cub **cub, t_vec2 tex, t_vec2 val)
@@ -74,14 +86,12 @@ void	draw_side(t_mlx side, t_ray **ray, t_cub *cub, int x)
 
 void	draw_stripe(t_ray **ray, t_cub *cub, int x)
 {
-	if (cub->map->map[(*ray)->map.y][(*ray)->map.x] == '2')
-		draw_side(cub->door, ray, cub, x);
-	else if ((*ray)->side == 1 && (*ray)->ray_dir.y > 0)
+	if ((*ray)->side == 1 && (*ray)->ray_dir.y > 0)
 		draw_side(cub->north, ray, cub, x);
 	else if ((*ray)->side == 1 && (*ray)->ray_dir.y <= 0)
 		draw_side(cub->south, ray, cub, x);
 	else if ((*ray)->side == 0 && (*ray)->ray_dir.x > 0)
-		draw_side(cub->east, ray, cub, x);
-	else
 		draw_side(cub->west, ray, cub, x);
+	else
+		draw_side(cub->east, ray, cub, x);
 }

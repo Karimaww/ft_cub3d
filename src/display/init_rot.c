@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_rot.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 21:16:23 by ksadykov          #+#    #+#             */
+/*   Updated: 2023/09/15 21:16:23 by ksadykov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	rot_angle(t_cub *cub, double angle)
@@ -28,6 +40,6 @@ void	init_rot(t_cub *cub)
 		rot_angle(cub, -PI / 2);
 	else if (cub->map->map[y][x] == 'S')
 		rot_angle(cub, PI / 2);
-	else if (cub->map->map[y][x] == 'W')
+	else if (cub->map->map[y][x] == 'E')
 		rot_angle(cub, PI);
 }

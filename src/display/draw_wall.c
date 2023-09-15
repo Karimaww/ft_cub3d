@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_wall.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 21:16:14 by ksadykov          #+#    #+#             */
+/*   Updated: 2023/09/15 21:16:14 by ksadykov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 /**
@@ -11,7 +23,7 @@
  */
 void	init_raydir(t_ray **ray, t_cub *cub, int x)
 {
-	(*ray)->camera_x = 2 * x / (double)(cub->mlx.win_size.x) - 1;
+	(*ray)->camera_x = (2 * x / (double)(cub->mlx.win_size.x) - 1) * -1;
 	(*ray)->ray_dir.x = (*ray)->dir.x + (*ray)->plane.x * (*ray)->camera_x;
 	(*ray)->ray_dir.y = (*ray)->dir.y + (*ray)->plane.y * (*ray)->camera_x;
 	(*ray)->map.x = (int)((*ray)->pos.x);
@@ -81,8 +93,7 @@ void	dda_algo(t_ray **ray, t_cub *cub)
 			(*ray)->map.y += (*ray)->step.y;
 			(*ray)->side = 1;
 		}
-		if (cub->map->map[(*ray)->map.y][(*ray)->map.x] == '1'
-			|| cub->map->map[(*ray)->map.y][(*ray)->map.x] == '2')
+		if (cub->map->map[(*ray)->map.y][(*ray)->map.x] == '1')
 			(*ray)->hit = 1;
 	}
 }

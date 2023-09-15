@@ -1,8 +1,7 @@
-# the bonus will be in src/bonus etc...
 CC			= cc
 NAME		= cub3d
+NAME_BONUS	= cub3d_bonus
 UNAME 		:= $(shell uname)
-BONUS		= no
 
 RED			= \033[0;31m
 GREEN		= \033[0;32m
@@ -12,26 +11,19 @@ NC			= \033[0m
 
 SOURCES_DISPLAY		=	draw_back.c		\
 						draw_cub.c		\
-						draw_line.c		\
-						draw_sprite.c	\
 						draw_stripe.c	\
 						draw_wall.c		\
 						init_cub.c		\
 						init_rot.c		\
-						init_sprite.c 	\
 						init_textures.c	\
 						move.c			\
-						pos_sprite.c	\
 						rotate.c		\
 						handle.c		\
-						draw_map.c		\
 						game_loop.c		\
-						#$(SOURCES_DISPLAY_BONUS)
 
 SOURCES_PARSING 	=	parse.c			\
 						parse_params.c	\
 						main.c			\
-						#$(SOURCES_PARSING_BONUS)
 
 SOURCES_UTILS 		=	lst_utils.c		\
 						map_utils.c		\
@@ -39,24 +31,46 @@ SOURCES_UTILS 		=	lst_utils.c		\
 						map_check2.c	\
 						mlx_actions.c	\
 						mlx_utils.c		\
-						#$(SOURCES_UTILS_BONUS)
 
-#here the files will only be included if bonus is set to yes
-#filter takes the variable bonus and checks if it is set to "yes" (it's a 
-#pattern recognition device)
-#SOURCES_DISPLAY_BONUS 	= $(if $(filter yes,$(BONUS)),bonus_draw_back.c \
-							bonus_draw_cub.c)
-#SOURCES_PARSING_BONUS 	= $(if $(filter yes,$(BONUS))
-#SOURCES_UTILS_BONUS	= $(if $(filter yes,$(BONUS))
+
+SOURCES_DISPLAY_BONUS 	= 	draw_back.c		\
+							draw_cub.c		\
+							draw_line.c		\
+							draw_sprite.c	\
+							draw_stripe.c	\
+							draw_wall.c		\
+							init_cub.c		\
+							init_rot.c		\
+							init_sprite.c 	\
+							init_textures.c	\
+							move.c			\
+							pos_sprite.c	\
+							rotate.c		\
+							handle.c		\
+							draw_map.c		\
+							game_loop.c		\
+							
+SOURCES_PARSING_BONUS 	= 	parse.c			\
+							parse_params.c	\
+							main.c			\
+
+SOURCES_UTILS_BONUS		= 	lst_utils.c		\
+							map_utils.c		\
+							map_check.c		\
+							map_check2.c	\
+							mlx_actions.c	\
+							mlx_utils.c		\
 
 LIBFT		= libft
 MLX			= mlx
 
-CFLAGS		= -Wall -Wextra -Werror -g3 
+CFLAGS		= -Wall -Wextra -Werror -g3
 
-INCLUDE		= include
-SRC_DIR		= src
-OBJ_DIR		= obj
+INCLUDE			= include
+SRC_DIR			= src
+SRC_DIR_BONUS 	= src_bonus
+OBJ_DIR			= obj
+OBJ_DIR_BONUS 	= obj_bonus
 
 RM			= rm -f
 
@@ -65,10 +79,14 @@ OBJS_UTILS = $(addprefix $(OBJ_DIR)/utils/, $(SOURCES_UTILS:.c=.o))
 OBJS_DISPLAY = $(addprefix $(OBJ_DIR)/display/, $(SOURCES_DISPLAY:.c=.o))
 OBJS = $(OBJS_PARSING) $(OBJS_UTILS) $(OBJS_DISPLAY)
 
+OBJS_PARSING_BONUS = $(addprefix $(OBJ_DIR_BONUS)/parsing/, $(SOURCES_PARSING_BONUS:.c=.o))
+OBJS_UTILS_BONUS = $(addprefix $(OBJ_DIR_BONUS)/utils/, $(SOURCES_UTILS_BONUS:.c=.o))
+OBJS_DISPLAY_BONUS = $(addprefix $(OBJ_DIR_BONUS)/display/, $(SOURCES_DISPLAY_BONUS:.c=.o))
+OBJS_BONUS = $(OBJS_PARSING_BONUS) $(OBJS_UTILS_BONUS) $(OBJS_DISPLAY_BONUS)
+
 all: intro lib obj $(NAME)
 
-#bonus:
-#	@$(MAKE) BONUS=yes all
+bonus: intro lib obj_bonus $(NAME_BONUS)
 
 intro:
 	@echo "$(GREEN)Compiling $(NAME)...$(NC)"
@@ -82,6 +100,12 @@ ifeq ($(UNAME), Darwin)
     LDFLAGS := -L $(LIBFT) -lft -L $(MLX) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 else
     LDFLAGS := -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME)
+endif
+
+ifeq ($(UNAME), Darwin)
+    LDFLAGS_BONUS := -L $(LIBFT) -lft -L $(MLX) -lmlx -framework OpenGL -framework AppKit -o $(NAME_BONUS)
+else
+    LDFLAGS_BONUS := -L $(LIBFT) -L $(MLX) -lmlx -lft -L/usr/lib -Imlx -lXext -lX11 -lm -lz -o $(NAME_BONUS)
 endif
 
 $(NAME): $(OBJS)
@@ -106,19 +130,40 @@ $(OBJ_DIR)/display/%.o: $(SRC_DIR)/display/%.c $(INCLUDE)/cub3d.h Makefile
 	@echo "    $(GREEN)Compiling $<$(NC)"
 	@$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
 
+$(NAME_BONUS): $(OBJS_BONUS)
+	@echo "$(YELLOW)Linking objects bonuses...$(NC)"
+	$(CC) $(OBJS_BONUS) $(LDFLAGS_BONUS)
+#$(CC) -fsanitize=address $(OBJS) $(LDFLAGS)
+	@echo "$(PURPLE)Compilation successful! ☆(❁‿❁)☆$(NC)"
+
+obj_bonus:
+	@echo "$(YELLOW)Creating object directories bonuses...$(NC)"
+	@mkdir -p $(OBJ_DIR_BONUS) $(OBJ_DIR_BONUS)/parsing $(OBJ_DIR_BONUS)/utils $(OBJ_DIR_BONUS)/display
+
+$(OBJ_DIR_BONUS)/parsing/%.o: $(SRC_DIR_BONUS)/parsing/%.c $(INCLUDE)/cub3d_bonus.h Makefile
+	@echo "    $(GREEN)Compiling $<$(NC)"
+	@$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
+
+$(OBJ_DIR_BONUS)/utils/%.o: $(SRC_DIR_BONUS)/utils/%.c $(INCLUDE)/cub3d_bonus.h Makefile
+	@echo "    $(GREEN)Compiling $<$(NC)"
+	@$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
+
+$(OBJ_DIR_BONUS)/display/%.o: $(SRC_DIR_BONUS)/display/%.c $(INCLUDE)/cub3d_bonus.h Makefile
+	@echo "    $(GREEN)Compiling $<$(NC)"
+	@$(CC) $(CFLAGS) -I $(INCLUDE) -Imlx -c $< -o $@
+
 clean:
 	@echo "$(RED)Cleaning up...$(NC)"
 	@make clean -C $(LIBFT)
 	@$(RM) -rf $(OBJ_DIR)
-#	@$(RM) $(addprefix $(OBJ_DIR)/display/, $(BONUS_SOURCES_DISPLAY:.c=.o))
-#	@$(RM) $(addprefix $(OBJ_DIR)/parsing/, $(BONUS_SOURCES_PARSING:.c=.o))
-#	@$(RM) $(addprefix $(OBJ_DIR)/utils/, $(BONUS_SOURCES_UTILS:.c=.o))
+	@$(RM) -rf $(OBJ_DIR_BONUS)
 
 fclean: clean
 	@echo "$(RED)Full cleaning... (◉◞౪◟◉)$(NC)"
 	@$(RM) -f $(NAME)
+	@$(RM) -f $(NAME_BONUS)
 	@make fclean -C $(LIBFT)
 
 re: fclean all
 
-.PHONY: all intro clean fclean re lib obj
+.PHONY: all intro clean fclean re lib obj bonus obj_bonus
