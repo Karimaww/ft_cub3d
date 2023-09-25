@@ -6,7 +6,7 @@
 /*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 21:14:10 by ksadykov          #+#    #+#             */
-/*   Updated: 2023/09/15 21:15:21 by ksadykov         ###   ########.fr       */
+/*   Updated: 2023/09/23 14:29:26 by ksadykov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,6 +216,7 @@ typedef struct s_cub
 	t_ray		*ray;
 	int			square_size;
 	int			frame_counter;
+	int			num_frames;
 }			t_cub;
 
 /*----parsing----*/

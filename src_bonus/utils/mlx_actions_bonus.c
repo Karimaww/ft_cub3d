@@ -6,7 +6,7 @@
 /*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 21:17:48 by ksadykov          #+#    #+#             */
-/*   Updated: 2023/09/15 21:17:48 by ksadykov         ###   ########.fr       */
+/*   Updated: 2023/09/23 14:37:07 by ksadykov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	free_cub_params(t_cub *cub)
 	i = 0;
 	if (cub->sprite)
 	{
-		while (j < SPRITE_COUNT)
+		while (j < cub->num_frames)
 		{
 			i = 0;
 			while (i < cub->sprite[j].text_count)

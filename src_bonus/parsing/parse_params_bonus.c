@@ -6,7 +6,7 @@
 /*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 21:17:34 by ksadykov          #+#    #+#             */
-/*   Updated: 2023/09/15 21:17:34 by ksadykov         ###   ########.fr       */
+/*   Updated: 2023/09/23 15:12:07 by ksadykov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int	put_dir(char **dir, char *line)
 	if (len == 0)
 		return (printf("Error\nNo file to use.\n"), EXIT_FAILURE);
 	*dir = ft_substr(line, i, len);
+	if (!*dir)
+		return (printf("Error\nNo directory: malloc error.\n"), EXIT_FAILURE);
 	if (access(*dir, F_OK) == -1)
 		return (printf("Error\nFile does not exist.\n"), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
@@ -92,8 +94,12 @@ int	put_color(t_color *color, char *line)
 	if (len == 0)
 		return (printf("Error\nNo color is given.\n"), EXIT_FAILURE);
 	subline = ft_substr(line, i, len);
+	if (!subline)
+		return (EXIT_FAILURE);
 	rgb = ft_split(subline, ',');
-	if (!rgb || check_colors(rgb, color) == EXIT_FAILURE)
+	if (!rgb)
+		return (free(subline), EXIT_FAILURE);
+	if (check_colors(rgb, color) == EXIT_FAILURE)
 		return (free(subline), free_tab(rgb), EXIT_FAILURE);
 	return (free(subline), free_tab(rgb), EXIT_SUCCESS);
 }

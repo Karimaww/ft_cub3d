@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_cub.c                                         :+:      :+:    :+:   */
+/*   init_cub_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 21:17:17 by ksadykov          #+#    #+#             */
-/*   Updated: 2023/09/15 21:17:17 by ksadykov         ###   ########.fr       */
+/*   Updated: 2023/09/23 16:08:11 by ksadykov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ t_cub	*init_cub(t_map *map)
 	if (init_mlx(&cub) == EXIT_FAILURE)
 		return (ft_close(cub), printf("Error\nMlx failed again :)\n"), NULL);
 	mlx_do_key_autorepeatoff(cub->mlx.mlx);
+	cub->num_frames = 0;
 	if (init_textures(&cub) == EXIT_FAILURE || init_ray(&ray, cub) == 1
 		|| init_sprite(&cub) == EXIT_FAILURE)
 		return (ft_close(cub), NULL);
