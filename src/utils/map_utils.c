@@ -6,7 +6,7 @@
 /*   By: ksadykov <ksadykov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 21:16:48 by ksadykov          #+#    #+#             */
-/*   Updated: 2023/09/15 21:16:48 by ksadykov         ###   ########.fr       */
+/*   Updated: 2023/09/15 21:50:03 by ksadykov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*ignore_empty_lines(char *line, int fd)
 		line = get_next_line(fd);
 	}
 	if (!line)
-		return (printf("Error: No map.\n"), NULL);
+		return (NULL);
 	return (line);
 }
 
