@@ -1,6 +1,6 @@
 CC			= cc
-NAME		= cub3d
-NAME_BONUS	= cub3d_bonus
+NAME		= cub3D
+NAME_BONUS	= cub3D_bonus
 UNAME 		:= $(shell uname)
 
 RED			= \033[0;31m
@@ -33,38 +33,42 @@ SOURCES_UTILS 		=	lst_utils.c		\
 						mlx_utils.c		\
 
 
-SOURCES_DISPLAY_BONUS 	= 	draw_back.c		\
-							draw_cub.c		\
-							draw_line.c		\
-							draw_sprite.c	\
-							draw_stripe.c	\
-							draw_wall.c		\
-							init_cub.c		\
-							init_rot.c		\
-							init_sprite.c 	\
-							init_textures.c	\
-							move.c			\
-							pos_sprite.c	\
-							rotate.c		\
-							handle.c		\
-							draw_map.c		\
-							game_loop.c		\
+SOURCES_DISPLAY_BONUS 	= 	draw_back_bonus.c		\
+							draw_cub_bonus.c		\
+							draw_line_bonus.c		\
+							draw_sprite_bonus.c	\
+							draw_stripe_bonus.c	\
+							draw_wall_bonus.c		\
+							init_cub_bonus.c		\
+							init_rot_bonus.c		\
+							init_sprite_bonus.c 	\
+							init_textures_bonus.c	\
+							move_bonus.c			\
+							pos_sprite_bonus.c	\
+							rotate_bonus.c		\
+							handle_bonus.c		\
+							draw_map_bonus.c		\
+							game_loop_bonus.c		\
 							
-SOURCES_PARSING_BONUS 	= 	parse.c			\
-							parse_params.c	\
-							main.c			\
+SOURCES_PARSING_BONUS 	= 	parse_bonus.c			\
+							parse_params_bonus.c	\
+							main_bonus.c			\
 
-SOURCES_UTILS_BONUS		= 	lst_utils.c		\
-							map_utils.c		\
-							map_check.c		\
-							map_check2.c	\
-							mlx_actions.c	\
-							mlx_utils.c		\
+SOURCES_UTILS_BONUS		= 	lst_utils_bonus.c		\
+							map_utils_bonus.c		\
+							map_check_bonus.c		\
+							map_check2_bonus.c	\
+							mlx_actions_bonus.c	\
+							mlx_utils_bonus.c		\
 
 LIBFT		= libft
 MLX			= mlx
 
 CFLAGS		= -Wall -Wextra -Werror -g3
+
+ifeq ($(debug), true)
+	CFLAGS += -fsanitize=address,undefined
+endif
 
 INCLUDE			= include
 SRC_DIR			= src
@@ -110,7 +114,7 @@ endif
 
 $(NAME): $(OBJS)
 	@echo "$(YELLOW)Linking objects...$(NC)"
-	$(CC) $(OBJS) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS)
 #$(CC) -fsanitize=address $(OBJS) $(LDFLAGS)
 	@echo "$(PURPLE)Compilation successful! ☆(❁‿❁)☆$(NC)"
 
@@ -155,6 +159,7 @@ $(OBJ_DIR_BONUS)/display/%.o: $(SRC_DIR_BONUS)/display/%.c $(INCLUDE)/cub3d_bonu
 clean:
 	@echo "$(RED)Cleaning up...$(NC)"
 	@make clean -C $(LIBFT)
+	@make clean -C $(MLX)
 	@$(RM) -rf $(OBJ_DIR)
 	@$(RM) -rf $(OBJ_DIR_BONUS)
 
@@ -163,6 +168,7 @@ fclean: clean
 	@$(RM) -f $(NAME)
 	@$(RM) -f $(NAME_BONUS)
 	@make fclean -C $(LIBFT)
+	@make clean -C $(MLX)
 
 re: fclean all
 

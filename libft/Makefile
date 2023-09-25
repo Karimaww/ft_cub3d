@@ -52,11 +52,15 @@ BONUS_OBJS = ${BONUS_SRCS:.c=.o}
 
 NAME	= libft.a
 
-CC		= gcc
+CC		= cc
 
 RM		= rm -f
 
 CFLAGS	= -Wall -Wextra -Werror -I. -g3
+
+ifeq ($(debug), true)
+	CFLAGS += -fsanitize=address,undefined
+endif
 
 .c.o:
 			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
